@@ -1,8 +1,11 @@
+import com.google.firebase.appdistribution.gradle.AppDistributionExtension
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.appdistribution)
 }
 
 // Backend endpoints and identity-exchange credentials are never committed: they come from
@@ -101,9 +104,42 @@ android {
         compose = true
         buildConfig = true
     }
+
+    testOptions {
+        // Gradle Managed Devices for instrumented tests: `./gradlew pixel6api34StagingDebugAndroidTest`.
+        managedDevices.localDevices {
+            create("pixel6api34") {
+                device = "Pixel 6"
+                apiLevel = 34
+                systemImageSource = "aosp-atd"
+                testedAbi = "x86_64"
+            }
+        }
+    }
+}
+
+// Firebase project lexken-ai registers the prod package only; the staging flavour (suffix .staging)
+// has no google-services.json until it is added to the console, so a missing file is ignored.
+googleServices {
+    missingGoogleServicesStrategy = com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy.IGNORE
+}
+
+// Firebase App Distribution: CI sets FIREBASE_SERVICE_ACCOUNT_FILE (decoded secret) and, for the
+// staging flavour, FIREBASE_APP_ID (the console's app id for com.lexken.lexkenai.staging). Prod
+// resolves its app id from google-services.json.
+configure<AppDistributionExtension> {
+    artifactType = "APK"
+    System.getenv("FIREBASE_SERVICE_ACCOUNT_FILE")?.let { serviceCredentialsFile = it }
+    System.getenv("FIREBASE_APP_ID")?.let { appId = it }
+    groups = System.getenv("FIREBASE_TESTER_GROUPS") ?: "testers"
+    releaseNotes = System.getenv("FIREBASE_RELEASE_NOTES") ?: ("Build " + (System.getenv("GITHUB_SHA")?.take(7) ?: "local"))
 }
 
 dependencies {
+    // Firebase, prod flavour only (Analytics; App Distribution is build-time).
+    "prodImplementation"(platform(libs.firebase.bom))
+    "prodImplementation"(libs.firebase.analytics)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

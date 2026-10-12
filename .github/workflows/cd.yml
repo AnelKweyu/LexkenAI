@@ -1,0 +1,138 @@
+name: CD
+
+# Cuts a release from a version tag (v1.2.3): store-signed prod AAB + APK and the staging APK,
+# attached to a GitHub Release; the AAB goes to the Play internal track when the Play secret
+# exists. Without the signing secrets the artifacts are debug-signed and the release is a
+# pre-release. See docs/RELEASE.md for the secret list.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version name (e.g. 1.0.1); the tag's name when triggered by a tag"
+        required: true
+      track:
+        description: "Play track for the prod AAB"
+        type: choice
+        options: [none, internal, alpha]
+        default: none
+
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false
+
+jobs:
+  build:
+    name: build · sign · release
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      code: ${{ steps.meta.outputs.code }}
+      signed: ${{ steps.keystore.outputs.signed }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Version
+        id: meta
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then v="${GITHUB_REF_NAME#v}"; else v="${{ inputs.version }}"; fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "code=$((100 + GITHUB_RUN_NUMBER))" >> "$GITHUB_OUTPUT"
+          echo "Release $v (versionCode $((100 + GITHUB_RUN_NUMBER)))"
+
+      - name: Store key
+        id: keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/store.jks"
+            echo "LEXKEN_KEYSTORE_PATH=$RUNNER_TEMP/store.jks" >> "$GITHUB_ENV"
+            echo "signed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::ANDROID_KEYSTORE_BASE64 is not set — the artifacts are debug-signed and the release is a pre-release."
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build release artifacts
+        env:
+          LEXKEN_KEYSTORE_PASSWORD: ${{ secrets.LEXKEN_KEYSTORE_PASSWORD }}
+          LEXKEN_KEY_ALIAS: ${{ secrets.LEXKEN_KEY_ALIAS }}
+          LEXKEN_KEY_PASSWORD: ${{ secrets.LEXKEN_KEY_PASSWORD }}
+          LEXKEN_APIBASE: ${{ secrets.LEXKEN_APIBASE }}
+          LEXKEN_STAGING_APIBASE: ${{ secrets.LEXKEN_STAGING_APIBASE }}
+          LEXKEN_VF_APIBASE: ${{ secrets.LEXKEN_VF_APIBASE }}
+          LEXKEN_VF_CLIENTID: ${{ secrets.LEXKEN_VF_CLIENTID }}
+          LEXKEN_VF_CLIENTSECRET: ${{ secrets.LEXKEN_VF_CLIENTSECRET }}
+          LEXKEN_VF_BYPASSKEY: ${{ secrets.LEXKEN_VF_BYPASSKEY }}
+          LEXKEN_VF_BUNDLEID: ${{ secrets.LEXKEN_VF_BUNDLEID }}
+        run: >-
+          ./gradlew :app:bundleProdRelease :app:assembleProdRelease :app:assembleStagingRelease
+          -Plexken.versionName=${{ steps.meta.outputs.version }}
+          -Plexken.versionCode=${{ steps.meta.outputs.code }}
+          --stacktrace
+
+      - name: Collect
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/bundle/prodRelease/app-prod-release.aab "dist/lexken-ai-${{ steps.meta.outputs.version }}-prod.aab"
+          cp app/build/outputs/apk/prod/release/app-prod-release.apk "dist/lexken-ai-${{ steps.meta.outputs.version }}-prod.apk"
+          cp app/build/outputs/apk/staging/release/app-staging-release.apk "dist/lexken-ai-${{ steps.meta.outputs.version }}-staging.apk"
+          (cd dist && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ steps.meta.outputs.version }}
+          path: dist/*
+          if-no-files-found: error
+
+      - name: GitHub Release
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          flags=""; [ "${{ steps.keystore.outputs.signed }}" = "true" ] || flags="--prerelease"
+          gh release create "$GITHUB_REF_NAME" dist/* --title "LexKen AI ${{ steps.meta.outputs.version }}" --generate-notes $flags
+
+  play:
+    name: Play internal track
+    needs: build
+    if: needs.build.outputs.signed == 'true' && (github.event_name == 'push' || inputs.track != 'none')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Play credentials present?
+        id: creds
+        env:
+          PLAY_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          if [ -n "$PLAY_JSON" ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "::notice::PLAY_SERVICE_ACCOUNT_JSON is not set — skipping the Play upload."; echo "present=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/download-artifact@v4
+        if: steps.creds.outputs.present == 'true'
+        with:
+          name: release-${{ needs.build.outputs.version }}
+          path: dist
+      - name: Upload to Play
+        if: steps.creds.outputs.present == 'true'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.lexken.lexkenai
+          releaseFiles: dist/lexken-ai-${{ needs.build.outputs.version }}-prod.aab
+          track: ${{ github.event_name == 'push' && 'internal' || inputs.track }}
+          status: completed
+          inAppUpdatePriority: 0

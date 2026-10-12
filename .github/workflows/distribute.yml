@@ -1,0 +1,75 @@
+name: Distribute
+
+# Every push to main builds the R8 staging APK and hands it to testers through Firebase App
+# Distribution. Without FIREBASE_SERVICE_ACCOUNT_JSON the APK is only attached to the run.
+#
+# Secrets: FIREBASE_SERVICE_ACCOUNT_JSON, FIREBASE_STAGING_APP_ID
+# Variables (optional): FIREBASE_TESTER_GROUPS (comma-separated, default "testers")
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: distribute-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false
+
+jobs:
+  staging:
+    name: staging APK → testers
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build staging release
+        env:
+          LEXKEN_STAGING_APIBASE: ${{ secrets.LEXKEN_STAGING_APIBASE }}
+          LEXKEN_VF_APIBASE: ${{ secrets.LEXKEN_VF_APIBASE }}
+          LEXKEN_VF_CLIENTID: ${{ secrets.LEXKEN_VF_CLIENTID }}
+          LEXKEN_VF_CLIENTSECRET: ${{ secrets.LEXKEN_VF_CLIENTSECRET }}
+          LEXKEN_VF_BYPASSKEY: ${{ secrets.LEXKEN_VF_BYPASSKEY }}
+          LEXKEN_VF_BUNDLEID: ${{ secrets.LEXKEN_VF_BUNDLEID }}
+        run: >-
+          ./gradlew :app:assembleStagingRelease
+          -Plexken.versionCode=$((100 + GITHUB_RUN_NUMBER))
+          -Plexken.versionName=0.0.${GITHUB_RUN_NUMBER}
+          --stacktrace
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: staging-apk-${{ github.run_number }}
+          path: app/build/outputs/apk/staging/release/*.apk
+          if-no-files-found: error
+
+      - name: Firebase credentials present?
+        id: creds
+        env:
+          FIREBASE_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          APP_ID: ${{ secrets.FIREBASE_STAGING_APP_ID }}
+        run: |
+          if [ -n "$FIREBASE_JSON" ] && [ -n "$APP_ID" ]; then
+            echo "$FIREBASE_JSON" > "$RUNNER_TEMP/firebase-sa.json"
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::FIREBASE_SERVICE_ACCOUNT_JSON / FIREBASE_STAGING_APP_ID not set — skipping App Distribution."
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload to Firebase App Distribution
+        if: steps.creds.outputs.present == 'true'
+        env:
+          FIREBASE_SERVICE_ACCOUNT_FILE: ${{ runner.temp }}/firebase-sa.json
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_STAGING_APP_ID }}
+          FIREBASE_TESTER_GROUPS: ${{ vars.FIREBASE_TESTER_GROUPS || 'testers' }}
+          FIREBASE_RELEASE_NOTES: ${{ github.event.head_commit.message || 'Manual build' }}
+        run: ./gradlew :app:appDistributionUploadStagingRelease --stacktrace

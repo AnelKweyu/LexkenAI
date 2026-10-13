@@ -1,0 +1,13 @@
+{
+  "method": "POST",
+  "path": "/sub/discounts/validate/",
+  "status": 200,
+  "body": {
+    "original_price": 2500.0,
+    "discounted_price": 1250.0,
+    "discount_percentage": 50,
+    "discount_amount": 1250.0,
+    "code": "LEX50"
+  },
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

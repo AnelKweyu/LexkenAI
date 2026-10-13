@@ -7,14 +7,18 @@ import com.lexken.lexkenai.core.network.NetworkQualifiers
 import com.lexken.lexkenai.core.network.aisession.DataStoreDeviceIdStore
 import com.lexken.lexkenai.core.network.aisession.DeviceIdStore
 import com.lexken.lexkenai.core.network.networkModule
+import com.lexken.lexkenai.feature.account.accountModule
+import com.lexken.lexkenai.feature.billing.BillingQualifiers
+import com.lexken.lexkenai.feature.billing.billingModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-/** Values core needs from BuildConfig: the flavour's hosts and the identity-host credentials. */
+/** Values core and the features need from BuildConfig: the flavour's hosts, the identity-host credentials, the payment rail. */
 private val buildConfigModule = module {
     single(NetworkQualifiers.BASE_URL) { BuildConfig.API_BASE_URL }
     single(NetworkQualifiers.DEBUG_LOGGING) { BuildConfig.DEBUG }
+    single(BillingQualifiers.PAYMENT_PROVIDER_NAME) { BuildConfig.PAYMENT_PROVIDER }
     single {
         VfConfig(
             baseUrl = BuildConfig.VF_API_BASE_URL,
@@ -37,4 +41,6 @@ val appModules: List<Module> = listOf(
     platformModule,
     networkModule,
     authModule,
+    accountModule,
+    billingModule,
 )

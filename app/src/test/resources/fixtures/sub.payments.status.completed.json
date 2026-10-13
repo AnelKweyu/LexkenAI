@@ -1,0 +1,13 @@
+{
+  "method": "GET",
+  "path": "/sub/payments/status/pay-1/",
+  "template": "/sub/payments/status/{payment_id}/",
+  "status": 200,
+  "body": {
+    "id": "pay-1",
+    "status": "COMPLETED",
+    "amount": "1000.00",
+    "mpesa_receipt_number": "QGH7K2L9MN"
+  },
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

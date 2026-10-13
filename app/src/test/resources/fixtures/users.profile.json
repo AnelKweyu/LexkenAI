@@ -1,0 +1,31 @@
+{
+  "method": "GET",
+  "path": "/users/profile/",
+  "status": 200,
+  "body": {
+    "user": {
+      "id": 41,
+      "email": "tier1@lexken.test",
+      "full_name": "Tier One",
+      "phone_number": "+254712345678"
+    },
+    "personal_ai_credits_balance": 0,
+    "shared_credit_monthly_usage_limit": null,
+    "current_month_shared_credits_used": 0,
+    "shared_credits_limit_reset_date": null,
+    "preferred_language": "en",
+    "user_timezone": "Africa/Nairobi",
+    "notification_preferences": {
+      "email_updates": true,
+      "sms_alerts": false,
+      "in_app_new_features": true,
+      "promotional_emails": true,
+      "daily_case_reminders": true,
+      "monthly_cause_list": true
+    },
+    "avatar_url": "https://stage.lexken.ai/media/avatars/41.png",
+    "created_at": "2026-08-01T08:00:00Z",
+    "updated_at": "2026-09-05T10:00:00Z"
+  },
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

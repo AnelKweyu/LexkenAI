@@ -1,0 +1,89 @@
+{
+  "method": "GET",
+  "path": "/auth/api/my-plan-card/",
+  "status": 200,
+  "body": {
+    "all_plans": [
+      {
+        "id": "fc9c7e1f-8522-4e80-b44c-7fbf2ed524e0",
+        "tier": "SOLO",
+        "name": "Solo",
+        "price": "2500.00",
+        "features": {
+          "modules": [
+            "Lexken AI",
+            "Document Management",
+            "File Manager"
+          ],
+          "agent_access": "Limited BRS Agent and CTS Agent access",
+          "support_type": "Email",
+          "users_included": 2,
+          "file_manager_storage": "500MB",
+          "firm_knowledge_store": "2GB",
+          "firm_knowledge_storage_mb": 2048
+        },
+        "duration": "30 00:00:00",
+        "is_active": true,
+        "monthly_ai_credits_allowance": 100,
+        "max_employees": 2,
+        "storage": 500,
+        "max_documents": 0,
+        "max_transactions": 0,
+        "max_dms_conversions": 0,
+        "limit_pms_clients": 0,
+        "limit_pms_matters": 0,
+        "limit_pms_cases": 0,
+        "limit_pms_tasks": 0,
+        "limit_pms_invoices": 0,
+        "limit_pms_employees": 5,
+        "client_portal": true
+      }
+    ],
+    "current_subscription": {
+      "id": "5e47cc4b-0504-4d0c-b47d-42966daa693a",
+      "user": "daeb92d2-931c-4d9d-8710-b8a5fb35b251",
+      "plan": {
+        "id": "fc9c7e1f-8522-4e80-b44c-7fbf2ed524e0",
+        "tier": "SOLO",
+        "name": "Solo",
+        "price": "2500.00",
+        "features": {
+          "modules": [
+            "Lexken AI",
+            "Document Management",
+            "File Manager"
+          ],
+          "agent_access": "Limited BRS Agent and CTS Agent access",
+          "support_type": "Email",
+          "users_included": 2,
+          "file_manager_storage": "500MB",
+          "firm_knowledge_store": "2GB",
+          "firm_knowledge_storage_mb": 2048
+        },
+        "duration": "30 00:00:00",
+        "is_active": true,
+        "monthly_ai_credits_allowance": 100,
+        "max_employees": 2,
+        "storage": 500,
+        "max_documents": 0,
+        "max_transactions": 0,
+        "max_dms_conversions": 0,
+        "limit_pms_clients": 0,
+        "limit_pms_matters": 0,
+        "limit_pms_cases": 0,
+        "limit_pms_tasks": 0,
+        "limit_pms_invoices": 0,
+        "limit_pms_employees": 5,
+        "client_portal": true
+      },
+      "start_date": "2026-08-28",
+      "end_date": "2026-09-27",
+      "is_active": true,
+      "features_usage": {
+        "storage_used_bytes": 414132,
+        "active_users": 1
+      }
+    }
+  },
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

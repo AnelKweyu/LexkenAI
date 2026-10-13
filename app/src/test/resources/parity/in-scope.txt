@@ -1,4 +1,5 @@
 # Appendix areas whose feature has landed, one per line. tools/parity-coverage.sh fails the
-# build when a request row of a listed area has no T2 test carrying its tag ([area#id]).
+# build when a request row of a listed area has no T2 test carrying its tag (`area#id`).
 # Area keys: auth chat tools contracts dms research files pms
-# P0 (test rig): nothing in scope yet. P1 adds: auth
+# P1 (account + billing) brought the auth area into scope.
+auth

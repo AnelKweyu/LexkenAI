@@ -149,6 +149,8 @@ class RouteCatalogTest {
                 .flatMap { api ->
                     api.declaredMethods.mapNotNull { method ->
                         val (verb, path) = method.httpRoute() ?: return@mapNotNull null
+                        // A blank path is a dynamic `@Url` call (a DRF `next` link); the page it follows is checked where it is produced.
+                        if (path.isBlank()) return@mapNotNull null
                         Endpoint(api.simpleName, verb, path)
                     }
                 }

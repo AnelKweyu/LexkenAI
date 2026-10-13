@@ -1,0 +1,10 @@
+{
+  "method": "GET",
+  "path": "/sub/current/",
+  "status": 404,
+  "body": {
+    "message": "No subscription information found for your account.",
+    "has_subscription": false
+  },
+  "note": "documented from source, not recorded: subscription/views.py CurrentUserSubscriptionView (prod_staging f33be2a) when the account has neither a subscription nor an assignment."
+}

@@ -1,0 +1,37 @@
+{
+  "method": "GET",
+  "path": "/sub/current/",
+  "status": 200,
+  "body": {
+    "subscription": null,
+    "assigned_subscription": {
+      "id": "3c2d1e0f-9a8b-4c7d-8e6f-5a4b3c2d1e0f",
+      "subscription": {
+        "id": "5e47cc4b-0504-4d0c-b47d-42966daa693a",
+        "plan": {
+          "id": "fc9c7e1f-8522-4e80-b44c-7fbf2ed524e0",
+          "tier": "BSC",
+          "name": "Basic",
+          "price": "5000.00",
+          "features": {
+            "users_included": 15
+          },
+          "duration": "30 00:00:00",
+          "is_active": true
+        },
+        "start_date": "2026-09-20",
+        "end_date": "2026-10-20",
+        "is_active": true,
+        "is_paid": true,
+        "is_expired": false,
+        "ai_credits_balance": 860,
+        "ai_credits_reset_date": "2026-10-20"
+      },
+      "assigned_date": "2026-09-21T07:30:00Z",
+      "is_active": true,
+      "monthly_credit_limit": 200,
+      "current_credits_used": 45
+    }
+  },
+  "note": "documented from source, not recorded: subscription/serializers.py SubscriptionAssignment shape (prod_staging f33be2a) for an employee of a firm on the Basic plan."
+}

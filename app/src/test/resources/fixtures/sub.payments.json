@@ -1,0 +1,46 @@
+{
+  "method": "GET",
+  "path": "/sub/payments/",
+  "status": 200,
+  "body": [
+    {
+      "id": "8e1f2a3b-4c5d-4e6f-9a7b-8c9d0e1f2a3b",
+      "created_at": "2026-08-30T09:12:44Z",
+      "updated_at": "2026-08-30T09:14:02Z",
+      "amount": "2500.00",
+      "description": "Solo plan - monthly",
+      "status": "SUCCESS",
+      "mpesa_receipt_number": "QGH7K2L9MN",
+      "plan_name": "Solo",
+      "invoice": {
+        "id": "b04c1d2e-3f4a-4b5c-8d6e-7f8a9b0c1d2e",
+        "invoice_number": "INV-2026-000117",
+        "pdf_file": "https://stage.lexken.ai/media/invoices/INV-2026-000117.pdf",
+        "created_at": "2026-08-30T09:14:05Z"
+      }
+    },
+    {
+      "id": "9f2a3b4c-5d6e-4f7a-8b9c-0d1e2f3a4b5c",
+      "created_at": "2026-09-05T16:40:00Z",
+      "updated_at": "2026-09-05T16:40:00Z",
+      "amount": "500.00",
+      "description": "AI credit top-up",
+      "status": "PENDING",
+      "mpesa_receipt_number": null,
+      "plan_name": null,
+      "invoice": null
+    },
+    {
+      "id": "0a3b4c5d-6e7f-4a8b-9c0d-1e2f3a4b5c6d",
+      "created_at": "2026-07-18T11:05:00Z",
+      "updated_at": "2026-07-18T11:06:00Z",
+      "amount": "2500.00",
+      "description": "Solo plan - monthly",
+      "status": "FAILED",
+      "mpesa_receipt_number": null,
+      "plan_name": "Solo",
+      "invoice": null
+    }
+  ],
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

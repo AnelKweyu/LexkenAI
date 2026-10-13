@@ -82,7 +82,7 @@ class AiSessionInterceptorTest {
     }
 
     @Test
-    fun `a protected path mints once with the bearer and device id, then attaches both headers`() {
+    fun `a protected path mints once with the bearer and device id, then attaches both headers auth#25`() {
         server.serve("ai.session.created")
         server.serve(Host.LAWRIS, "POST", "/ai/lawris-ai/", body = """{"thread_id":"t-1"}""")
 

@@ -86,7 +86,7 @@ class RemoteSessionRepositoryTest {
     private fun paths() = (1..4).map { server.takeRequest().url.encodedPath }.toSet()
 
     @Test
-    fun `refresh hits the four session endpoints and maps a signed-in user`() = runTest {
+    fun `refresh hits the four session endpoints and maps a signed-in user auth#40 auth#43`() = runTest {
         val state = repository.refresh().getOrNull() as SessionState.SignedIn
 
         assertThat(state.user.fullName).isEqualTo("Wanjiru Kamau")
@@ -95,7 +95,8 @@ class RemoteSessionRepositoryTest {
         assertThat(state.user.role).isEqualTo(UserRole.ADVOCATE)
         assertThat(state.user.firmName).isEqualTo("Kamau & Otieno Advocates, Upper Hill, Nairobi")
         // Personal + subscription pools are one balance to the app.
-        assertThat(state.credits).isEqualTo(Credits(1_250))
+        // creditService.jsx: subscription || personal || shared || 0 — the first non-zero wins, never the sum.
+        assertThat(state.credits).isEqualTo(Credits(1_000))
         assertThat(paths()).isEqualTo(
             setOf("/api/users/profile/nav-info/", "/api/users/lawfirm-profile/", "/api/sub/ai-credits-balance/", "/api/sub/current/"),
         )

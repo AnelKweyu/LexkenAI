@@ -36,7 +36,7 @@ jobs:
         run: ./gradlew :app:pixel6api34StagingDebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
       - name: Upload device test reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: device-test-reports
           path: app/build/reports/androidTests/managedDevice/**

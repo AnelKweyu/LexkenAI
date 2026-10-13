@@ -1,0 +1,13 @@
+{
+  "method": "POST",
+  "path": "/rag/cancel-task/",
+  "status": 500,
+  "body": {
+    "status": "error",
+    "message": "Failed to cancel task.",
+    "details": [
+      "revoke failed"
+    ]
+  },
+  "note": "documented from source, not recorded: rag/views.py CancelTaskView (prod_staging f33be2a)."
+}

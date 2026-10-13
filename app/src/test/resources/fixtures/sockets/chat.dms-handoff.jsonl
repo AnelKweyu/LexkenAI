@@ -1,0 +1,9 @@
+# documented from rag/general_ai_tools.py + dmsToolCatalog.js: a DMS tool handoff auto-opens once per task id, then the bundle offer and briefing confirm cards
+{"client": {"thread_id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10"}}
+{"server": {"type": "tool.dms_tool_started", "data": {"tool": "tenth_lining_with_pagination", "status": "started", "task_id": "dms-task-1", "document_name": "Plaint - Ramoya.pdf", "stage": "queued"}}}
+{"server": {"type": "tool.dms_tool_started", "data": {"tool": "tenth_lining_with_pagination", "status": "started", "task_id": "dms-task-1", "stage": "running", "progress": 40}}}
+{"server": {"type": "tool.document_bundle_offer", "data": {"option_id": "suits:suit_2", "option_name": "Breach of contract", "status": "pending", "documents": [{"name": "Demand Letter", "required": true}, {"name": "Plaint", "required": true}, {"name": "List of Witnesses", "required": false}], "suggested_documents": ["Demand Letter", "Plaint", "List of Witnesses"], "default_document_limit": 2}}}
+{"server": {"type": "tool.briefing_confirm", "data": {"cases": ["A v B [2019] eKLR", "C v D [2020] eKLR", "E v F [2021] eKLR", "G v H [2018] eKLR", "I v J [2017] eKLR", "K v L [2016] eKLR"], "timeout_seconds": 120, "message_id": "42fc18c8-28b1-431d-8424-6c38cd82935f"}}}
+{"server": {"type": "tool.document_bundle_started", "data": {"generation_run_id": "run-77", "task_id": "gen-task-77", "option_id": "suits:suit_2", "option_name": "Breach of contract", "documents": ["Demand Letter", "Plaint"], "run_status": "RUNNING"}}}
+{"server": {"type": "stream.end"}}
+{"close": 1000, "reason": "stream.end"}

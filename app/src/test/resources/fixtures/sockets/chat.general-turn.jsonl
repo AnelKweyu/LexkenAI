@@ -1,0 +1,12 @@
+# carried over from the older app's recorded-shape fixture (stage.lexken.ai, 2026-09): a general-AI turn with progress, chunks, sources and the final response
+{"client": {"thread_id": "thread-1"}}
+{"server": {"type": "status.update", "message": "Retrieving context"}}
+{"server": {"type": "progress_update", "message": "Drafting the email", "current": 2, "total": 3}}
+{"server": {"type": "stream.chunk", "message": "Dear Sir, "}}
+{"server": {"type": "stream.chunk", "message": "RE: DEMAND "}}
+{"server": {"type": "stream.chunk", "message": "FOR PAYMENT"}}
+{"server": {"type": "rag.case_sources", "data": {"sources": [{"case_id": "Karanja v Mwaura [2019] eKLR", "title": "Karanja v Mwaura", "court": "High Court", "date": "2019-05-14", "url": "https://kenyalaw.org/caselaw/cases/view/1"}]}}}
+{"server": {"type": "grounding.sources", "data": {"sources": [{"title": "Limitation of Actions Act", "uri": "https://kenyalaw.org/kl/index.php?id=1", "domain": "kenyalaw.org"}], "search_queries": ["limitation period demand letter kenya"]}}}
+{"server": {"type": "full_llm_response", "message": "Dear Sir, RE: DEMAND FOR PAYMENT", "metadata": {"type": "email_draft"}}}
+{"server": {"type": "stream.end"}}
+{"close": 1000, "reason": "stream.end"}

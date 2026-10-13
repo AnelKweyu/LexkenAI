@@ -1,0 +1,24 @@
+{
+  "method": "PUT",
+  "path": "/api/drafting/playbooks/lease_agreement/",
+  "status": 200,
+  "body": {
+    "id": "pb-1",
+    "document_type": "lease_agreement",
+    "api_document_type": "lease_agreement",
+    "title": "Lease agreement playbook",
+    "content": "# Lease agreement\n\nAlways cite the Land Act 2012 and the Landlord and Tenant (Shops, Hotels and Catering Establishments) Act, Cap 301.",
+    "version": 4,
+    "content_sha256": "abc",
+    "source": "custom",
+    "is_customized": true,
+    "updated_by": {
+      "id": "u",
+      "name": "Wanjiru Mwangi",
+      "email": "wanjiru@mwangiotieno.co.ke"
+    },
+    "updated_at": "2026-10-10T08:00:00+03:00"
+  },
+  "note": "documented from source, not recorded: drafting/views.py PlaybookDetailView.put (prod_staging f33be2a).",
+  "template": "/api/drafting/playbooks/{document_type}/"
+}

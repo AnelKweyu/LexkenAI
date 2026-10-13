@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "path": "/ai/brief-selected-cases/",
+  "status": 202,
+  "body": {
+    "message": "Briefing process initiated for 2 case(s).",
+    "group_task_id": "chord-7f3a"
+  },
+  "note": "documented from source, not recorded: ai/views.py BriefSelectedCasesView.post (prod_staging f33be2a)."
+}

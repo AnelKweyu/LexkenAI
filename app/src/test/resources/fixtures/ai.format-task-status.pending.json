@@ -1,0 +1,12 @@
+{
+  "method": "GET",
+  "path": "/ai/format-task-status/fmt-task-1/",
+  "status": 200,
+  "body": {
+    "task_id": "fmt-task-1",
+    "status": "PENDING",
+    "result": null
+  },
+  "note": "documented from source, not recorded: ai/views.py FormatTaskStatusView (prod_staging f33be2a).",
+  "template": "/ai/format-task-status/{task_id}/"
+}

@@ -1,0 +1,47 @@
+{
+  "method": "GET",
+  "path": "/ai/conversations/f1e2d3c4-0000-4a6b-8c7d-9e0f1a2b3c4d/messages/",
+  "template": "/ai/conversations/{conversation_id}/messages/",
+  "status": 200,
+  "note": "Documented shape (chat audit 2026-09-17, C3): a user turn's metadata.files carries the documents it was sent with — the web's ChatMessage renders them as chips on reopen. Two spellings are in use: bare names and {name,size,type} objects.",
+  "body": [
+    {
+      "id": "f1e2d3c4-0001-4a6b-8c7d-9e0f1a2b3c4d",
+      "role": "user",
+      "content": "Review the attached lease and the rent schedule for the Westlands premises.",
+      "created_at": "2026-09-17T09:12:00.000000+03:00",
+      "metadata": {
+        "ems_project_task_id": "task-files-1",
+        "files": [
+          "westlands-lease.pdf",
+          {
+            "name": "rent-schedule.docx",
+            "size": 82000,
+            "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          }
+        ]
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": []
+    },
+    {
+      "id": "f1e2d3c4-0002-4a6b-8c7d-9e0f1a2b3c4d",
+      "role": "assistant",
+      "content": "The lease runs for six years from 1 March 2026 at a monthly rent of KES 180,000, reviewed upward by 10% every two years. The rent schedule matches the lease for the first two years but shows KES 205,000 from March 2028, which exceeds the 10% cap.",
+      "created_at": "2026-09-17T09:12:41.000000+03:00",
+      "metadata": {
+        "files": [
+          "westlands-lease.pdf",
+          "rent-schedule.docx"
+        ],
+        "status": "completed"
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": [
+        "Reading westlands-lease.pdf",
+        "Reading rent-schedule.docx",
+        "Comparing the rent terms"
+      ]
+    }
+  ]
+}

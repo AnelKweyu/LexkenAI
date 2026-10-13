@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "path": "/ai/lawris-ai/",
+  "status": 202,
+  "body": {
+    "thread_id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10",
+    "task_id": "celery-7d4e5f6a"
+  },
+  "note": "documented from source, not recorded: ai/views.py LegalAssistantView.post, general-AI branch (prod_staging f33be2a). The web's data.thread_id / data.task_id; the route is behind AISessionRequired (ask #1), so this cannot be recorded for a mobile principal yet."
+}

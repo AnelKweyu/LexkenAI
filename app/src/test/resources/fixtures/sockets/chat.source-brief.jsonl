@@ -1,0 +1,6 @@
+# documented from BriefSelectedCasesView + rag/tasks.py: the dedicated brief socket for a source-card click, the brief arrives, the batch completes
+{"client": {"thread_id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10"}}
+{"server": {"type": "progress_update", "message": "Briefing Karanja v Mwaura"}}
+{"server": {"type": "extracted_case_result", "data": {"case_id": "6e2a9c44-1f3b-4d7e-9a8c-2b5d7f1e3c90", "title": "Karanja v Mwaura", "citation": "[2019] eKLR", "summary": "The court declined to enforce a one-sided termination clause.", "brief": "## Facts\n..."}}}
+{"server": {"type": "briefing_batch_complete"}}
+{"close": 1000, "reason": "done"}

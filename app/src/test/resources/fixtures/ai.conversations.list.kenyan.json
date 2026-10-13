@@ -1,0 +1,56 @@
+{
+  "method": "GET",
+  "path": "/ai/conversations/",
+  "status": 200,
+  "body": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111",
+      "user": {
+        "id": "daeb92d2-931c-4d9d-8710-b8a5fb35b251",
+        "full_name": "Wanjiru Mwangi"
+      },
+      "title": "[General AI] Notice period under the Employment Act",
+      "backend_thread_id": null,
+      "created_at": "2026-10-13T06:00:00+03:00",
+      "last_updated": "2026-10-13T06:20:00+03:00",
+      "metadata": {}
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "user": {
+        "id": "daeb92d2-931c-4d9d-8710-b8a5fb35b251",
+        "full_name": "Wanjiru Mwangi"
+      },
+      "title": "[DB] Adverse possession twelve-year rule",
+      "backend_thread_id": null,
+      "created_at": "2026-10-12T09:00:00+03:00",
+      "last_updated": "2026-10-12T09:30:00+03:00",
+      "metadata": {}
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333333",
+      "user": {
+        "id": "daeb92d2-931c-4d9d-8710-b8a5fb35b251",
+        "full_name": "Wanjiru Mwangi"
+      },
+      "title": "",
+      "backend_thread_id": null,
+      "created_at": "2026-09-01T09:00:00+03:00",
+      "last_updated": "2026-09-01T09:30:00+03:00",
+      "metadata": {}
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444444",
+      "user": {
+        "id": "daeb92d2-931c-4d9d-8710-b8a5fb35b251",
+        "full_name": "Wanjiru Mwangi"
+      },
+      "title": "[Contract] Westlands office lease",
+      "backend_thread_id": null,
+      "created_at": "2026-10-13T07:00:00+03:00",
+      "last_updated": "2026-10-13T07:45:00+03:00",
+      "metadata": {}
+    }
+  ],
+  "note": "documented from source, not recorded: ai/views.py ConversationListCreateAPIView (ConversationSerializer) (prod_staging f33be2a). Served out of order on purpose: the client sorts by last_updated."
+}

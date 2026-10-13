@@ -1,0 +1,65 @@
+{
+  "method": "GET",
+  "path": "/ai/conversations/ac6cfcad-e751-4e0b-96d4-21b12738173e/messages/",
+  "template": "/ai/conversations/{conversation_id}/messages/",
+  "status": 200,
+  "body": [
+    {
+      "id": "7aa2bec2-c208-4b87-abee-fdfd13a5b3d4",
+      "role": "user",
+      "content": "Run contractual analysis for residential-tenancy-agreement.pdf.",
+      "created_at": "2026-08-28T11:19:07.296642+03:00",
+      "metadata": {
+        "type": "contractual_analysis_request",
+        "feature": "contractual_analysis",
+        "file_name": "residential-tenancy-agreement.pdf",
+        "file_path": "/app/mediafiles/contractual_analysis_uploads/daeb92d2-931c-4d9d-8710-b8a5fb35b251/5683dfbc_residential-tenancy-agreement.pdf",
+        "focus_areas": [],
+        "analysis_mode": "balanced",
+        "analysis_type": "full_contract_review",
+        "document_type": null,
+        "drafting_effort": "medium",
+        "precedent_engine": "v2"
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": [],
+      "mentioned_cases_list": []
+    },
+    {
+      "id": "099efe9d-edf1-44c0-bfa7-c49f0d665806",
+      "role": "assistant",
+      "content": "I have finished reviewing **residential-tenancy-agreement**.\n\n- **Overall risk:** Critical\n- **Suggested amendments:** 60\n- **Verdict:** Not safe to sign without addressing the flagged issues.\n- **Report:** a PDF report was generated and is available in the workspace.\n\nOpen the workspace below to review each amendment and accept or reject it.",
+      "created_at": "2026-08-28T11:19:08.054080+03:00",
+      "metadata": {
+        "analysis_id": "d0b9a2cf-707c-4d4e-b9b2-bc509b52bf5a",
+        "analysis_mode": "balanced",
+        "contract_analysis_handoff": {
+          "tool": "contractual_analysis",
+          "route": "/contract-analysis/d0b9a2cf-707c-4d4e-b9b2-bc509b52bf5a",
+          "status": "complete",
+          "analysis_id": "d0b9a2cf-707c-4d4e-b9b2-bc509b52bf5a",
+          "document_name": "residential-tenancy-agreement.pdf",
+          "websocket_url": "/ws/ai/contractual-analysis/d0b9a2cf-707c-4d4e-b9b2-bc509b52bf5a/"
+        },
+        "feature": "contractual_analysis",
+        "overall_risk_rating": "Critical",
+        "patch_count": 60,
+        "pdf_url": "/media/daeb92d2-931c-4d9d-8710-b8a5fb35b251/GENERATED_BUNDLES/Contractual_Analysis_Report_27165460.pdf",
+        "status": "complete",
+        "stages": {
+          "report": "pending",
+          "patching": "pending",
+          "extraction": "pending",
+          "suggestions": "pending",
+          "enforceability": "pending",
+          "clause_analysis": "pending",
+          "authority_research": "pending"
+        }
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": [],
+      "mentioned_cases_list": []
+    }
+  ],
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

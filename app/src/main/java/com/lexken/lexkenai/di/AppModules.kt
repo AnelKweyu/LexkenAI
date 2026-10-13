@@ -10,6 +10,7 @@ import com.lexken.lexkenai.core.network.networkModule
 import com.lexken.lexkenai.feature.account.accountModule
 import com.lexken.lexkenai.feature.billing.BillingQualifiers
 import com.lexken.lexkenai.feature.billing.billingModule
+import com.lexken.lexkenai.feature.chat.chatModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -43,4 +44,5 @@ val appModules: List<Module> = listOf(
     authModule,
     accountModule,
     billingModule,
+    chatModule,
 )

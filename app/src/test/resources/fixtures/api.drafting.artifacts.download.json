@@ -1,0 +1,11 @@
+{
+  "method": "GET",
+  "path": "/api/drafting/artifacts/art-7d4e/download/",
+  "status": 200,
+  "body": {
+    "url": "https://lexkenbucket.sfo3.digitaloceanspaces.com/drafts/Demand_letter_Ramoya.docx?X-Amz-Expires=300&X-Amz-Signature=abc",
+    "filename": "Demand_letter_Ramoya.docx"
+  },
+  "note": "documented from source, not recorded: drafting/views.py ArtifactDownloadView (Spaces storage) (prod_staging f33be2a). Public path is /api/api/drafting/... because nginx strips one /api.",
+  "template": "/api/drafting/artifacts/{artifact_id}/download/"
+}

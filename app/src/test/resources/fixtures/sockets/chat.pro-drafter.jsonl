@@ -1,0 +1,8 @@
+# documented from drafting/events.py + drafting/tasks.py: a Pro-Drafter turn, stages, the artifact frame, then the final response with the file
+{"client": {"thread_id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10"}}
+{"server": {"type": "drafting.stage", "message": "Drafting the demand letter", "stage": "drafting", "run_id": "run-4c1d2e3f", "sequence": 1, "data": {"document_name": "Demand letter - Ramoya"}}}
+{"server": {"type": "drafting.progress", "message": "Applying the house style", "run_id": "run-4c1d2e3f", "sequence": 2}}
+{"server": {"type": "drafting.file", "data": {"id": "art-7d4e", "filename": "Demand_letter_Ramoya.docx", "download_url": "/api/drafting/artifacts/art-7d4e/download/", "size_bytes": 48211, "template_id": "tmpl-4f5e6d7c", "template_status": "ready", "placeholder_count": 2, "can_replace": true, "form_schema_url": "/api/dms/completion/v2/templates/tmpl-4f5e6d7c/schema/"}}}
+{"server": {"type": "full_llm_response", "message": "Your demand letter is ready.", "metadata": {"status": "completed"}, "file": {"id": "art-7d4e", "filename": "Demand_letter_Ramoya.docx", "download_url": "/api/drafting/artifacts/art-7d4e/download/", "placeholder_count": 2, "can_replace": true, "template_id": "tmpl-4f5e6d7c"}}}
+{"server": {"type": "stream.end"}}
+{"close": 1000, "reason": "stream.end"}

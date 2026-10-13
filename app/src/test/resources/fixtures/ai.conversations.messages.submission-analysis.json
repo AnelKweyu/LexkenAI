@@ -1,0 +1,98 @@
+{
+  "method": "GET",
+  "path": "/ai/conversations/c9d8e7f6-a5b4-4c3d-9e2f-1a0b9c8d7e6f/messages/",
+  "template": "/ai/conversations/{id}/messages/",
+  "status": 200,
+  "body": [
+    {
+      "id": "s1a2b3c4-0001-4a6b-8c7d-9e0f1a2b3c4d",
+      "role": "user",
+      "content": "Analyse the attached submissions for the Koech appeal.",
+      "created_at": "2026-09-14T18:00:00.000000+03:00",
+      "metadata": {
+        "type": "submission_analysis_request",
+        "feature": "submission_analyzer",
+        "file_name": "koech-submissions.docx"
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": []
+    },
+    {
+      "id": "s1a2b3c4-0002-4a6b-8c7d-9e0f1a2b3c4d",
+      "role": "assistant",
+      "content": "## Submission Analysis Complete\n\n- **Cases Found:** 3\n- **Verified:** 2\n- **Alternative Suggestions:** 1\n\n*View the detailed results below.*",
+      "created_at": "2026-09-14T18:06:00.000000+03:00",
+      "metadata": {
+        "type": "submission_analysis",
+        "document_name": "koech-submissions.docx",
+        "submission_analysis_handoff": {
+          "tool": "submission_analyzer",
+          "session_id": "sess-koech-1",
+          "mode": "full",
+          "status": "complete",
+          "document_name": "koech-submissions.docx"
+        },
+        "result": {
+          "status": "complete",
+          "extracted_cases": [
+            {
+              "case_name": "Kamau v Republic [2018] eKLR",
+              "citation": "[2018] eKLR"
+            },
+            {
+              "case_name": "Odinga v IEBC [2017] eKLR",
+              "citation": "[2017] eKLR"
+            },
+            {
+              "case_name": "Mwangi v Attorney General [2015] eKLR",
+              "citation": "[2015] eKLR"
+            }
+          ],
+          "verified_cases": [
+            {
+              "case_name": "Kamau v Republic [2018] eKLR",
+              "citation": "[2018] eKLR",
+              "url": "https://new.kenyalaw.org/akn/ke/judgment/kehc/2018/1/eng@2018-01-01"
+            },
+            {
+              "case_name": "Odinga v IEBC [2017] eKLR",
+              "citation": "[2017] eKLR",
+              "url": "https://new.kenyalaw.org/akn/ke/judgment/kesc/2017/1/eng@2017-09-01"
+            }
+          ],
+          "suggestions": [
+            {
+              "original_case": "Mwangi v Attorney General [2015] eKLR",
+              "suggestion_reason": "The cited case could not be verified; a similar authority on the same point was found.",
+              "alternative": {
+                "case_name": "Mwangi v Republic [2016] eKLR"
+              }
+            }
+          ],
+          "list_of_authorities": true,
+          "list_entries": [],
+          "bundle_path": "/app/mediafiles/bundles/koech-bundle.pdf",
+          "bundle_url": "/media/daeb92d2-931c-4d9d-8710-b8a5fb35b251/BUNDLES/koech-bundle.pdf",
+          "zip_url": "/media/daeb92d2-931c-4d9d-8710-b8a5fb35b251/BUNDLES/koech-bundle.zip",
+          "list_pdf_url": "/media/daeb92d2-931c-4d9d-8710-b8a5fb35b251/BUNDLES/koech-list-of-authorities.pdf",
+          "list_docx_url": "/media/daeb92d2-931c-4d9d-8710-b8a5fb35b251/BUNDLES/koech-list-of-authorities.docx",
+          "annotated_pdfs": [],
+          "total_credits_used": 42.5,
+          "credits_breakdown": [
+            {
+              "operation": "case_verification",
+              "credits": 30.0
+            },
+            {
+              "operation": "bundle",
+              "credits": 12.5
+            }
+          ]
+        }
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": []
+    }
+  ],
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

@@ -1,0 +1,11 @@
+# documented from rag/tasks.py: a Precedents (RAG) turn, the analysis completes with mentioned cases, briefs arrive one by one, the batch completes; stream.end before briefing_batch_complete must not end the turn
+{"client": {"thread_id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10"}}
+{"server": {"type": "stream.start", "data": {"id": "42fc18c8-28b1-431d-8424-6c38cd82935f", "role": "assistant", "content": "Processing query...", "created_at": "2026-10-13T06:22:14+03:00"}}}
+{"server": {"type": "progress_update", "message": "Initiating analysis..."}}
+{"server": {"type": "rag_analysis_complete", "data": {"mentioned_cases": ["Karanja v Mwaura [2019] eKLR", "Ramoya v Barasa [2020] KEELC 930 (KLR)", "Odinga v IEBC [2017] eKLR"], "full_llm_response": "Three authorities bear on adverse possession here."}}}
+{"server": {"type": "stream.end"}}
+{"server": {"type": "extracted_case_result", "data": {"case_id": "6e2a9c44-1f3b-4d7e-9a8c-2b5d7f1e3c90", "title": "Karanja v Mwaura", "citation": "[2019] eKLR", "summary": "The court declined to enforce a one-sided termination clause."}, "keyword_used": "Karanja v Mwaura"}}
+{"server": {"type": "extracted_case_result", "data": {"case_id": "6e2a9c44-1f3b-4d7e-9a8c-2b5d7f1e3c90", "title": "Karanja v Mwaura (duplicate frame)", "citation": "[2019] eKLR"}}}
+{"server": {"type": "briefing_batch_complete"}}
+{"server": {"type": "stream.end"}}
+{"close": 1000, "reason": "stream.end"}

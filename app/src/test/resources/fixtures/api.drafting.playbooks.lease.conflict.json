@@ -1,0 +1,12 @@
+{
+  "method": "PUT",
+  "path": "/api/drafting/playbooks/lease_agreement/",
+  "status": 409,
+  "body": {
+    "detail": "This playbook has changed since you opened it (you have v3, current is v5). Reload before saving.",
+    "expected": 3,
+    "current": 5
+  },
+  "note": "documented from source, not recorded: drafting/views.py PlaybookDetailView.put (prod_staging f33be2a).",
+  "template": "/api/drafting/playbooks/{document_type}/"
+}

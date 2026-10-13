@@ -1,0 +1,8 @@
+# documented from CaseSearchConsumer: register_task, progress, individual results (deduped by case_id), the final result list
+{"client": {"type": "register_task", "task_id": "search-task-1"}}
+{"server": {"type": "status.registered", "task_id": "search-task-1"}}
+{"server": {"type": "progress.update", "message": "Searching Kenya Law"}}
+{"server": {"type": "crawler.individual_result", "data": {"case_id": "kl-1", "title": "Mwangi v Attorney General [2015] eKLR"}, "message": "Found one"}}
+{"server": {"type": "crawler.individual_result", "data": {"case_id": "kl-1", "title": "Mwangi v Attorney General [2015] eKLR"}, "message": "Found one again"}}
+{"server": {"type": "crawler.result", "data": [{"case_id": "kl-1", "title": "Mwangi v Attorney General [2015] eKLR"}, {"case_id": "kl-2", "title": "Odinga v IEBC [2017] eKLR"}], "message": "Done"}}
+{"close": 1000, "reason": "done"}

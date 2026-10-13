@@ -1,0 +1,6 @@
+# carried over: the credits wall on the socket
+{"client": {"thread_id": "thread-1"}}
+{"server": {"type": "status.update", "message": "Checking your balance"}}
+{"server": {"type": "credits.insufficient", "error_code": "INSUFFICIENT_AI_CREDITS", "message": "You do not have enough credits for this request.", "detail": {"required": 25, "available": 3}}}
+{"server": {"type": "stream.end"}}
+{"close": 1000, "reason": "stream.end"}

@@ -1,0 +1,16 @@
+# documented from GeneralAIConsumer + rag/tasks.py and the 2026-09-18 live recording: a general-AI turn end to end, stream.start swaps the id, progress with run ordering, chunks, sources, the final response with metadata, stream.end, then the server closes
+{"client": {"thread_id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10"}}
+{"server": {"type": "stream.start", "data": {"id": "42fc18c8-28b1-431d-8424-6c38cd82935f", "role": "assistant", "content": "Processing query...", "created_at": "2026-10-13T06:22:14.503720+03:00", "metadata": {"status": "processing"}, "associated_cases_details": [], "ragProgressSteps": []}}}
+{"server": {"type": "status.update", "message": "LexKen AI is thinking..."}}
+{"server": {"type": "status.update", "message": "Searching relevant Kenyan statutes and provisions...", "run_id": "run-1", "sequence": 1}}
+{"server": {"type": "status.update", "message": "STALE frame from another run", "run_id": "run-0", "sequence": 9}}
+{"server": {"type": "progress_update", "message": "Reading the Employment Act, 2007", "run_id": "run-1", "sequence": 2}}
+{"server": {"type": "progress_update", "message": "Out-of-order duplicate", "run_id": "run-1", "sequence": 2}}
+{"server": {"type": "stream.chunk", "message": "Under section 35(1)(c) of the Employment Act, 2007, "}}
+{"server": {"type": "stream.chunk", "message": "an employee paid monthly is entitled to twenty-eight days of notice."}}
+{"server": {"type": "rag.statute_sources", "data": {"from_memory": false, "sources": [{"id": "statute_001", "title": "Employment Act", "citation": "Employment Act, 2007 (Cap 226)", "url": "https://new.kenyalaw.org/akn/ke/act/2007/11/eng@2012-12-31", "snippet": "35. (1) ...", "primary_sections": [{"section_number": "35", "section_title": "Notice of termination", "section_text": "Where a contract of service..."}]}]}}}
+{"server": {"type": "rag.case_sources", "data": {"sources": [{"case_id": "case-77", "title": "Kenya Airways Limited v Aviation & Allied Workers Union Kenya [2014] eKLR", "citation": "[2014] eKLR", "court": "Court of Appeal at Nairobi", "judgment_date": "2014-07-04", "usage_note": "Notice pay in lieu.", "source_page_url": "https://new.kenyalaw.org/akn/ke/judgment/keca/2014/1/eng@2014-07-04"}]}}}
+{"server": {"type": "grounding.sources", "data": {"sources": [{"uri": "https://www.labour.go.ke/notice-periods", "title": "Ministry of Labour notice periods"}], "search_queries": ["employment act 2007 notice period"], "grounding_supports": [{"text": "Twenty-eight days for monthly-paid employees.", "chunk_indices": [0]}]}}}
+{"server": {"type": "full_llm_response", "message": "Under section 35(1)(c) of the Employment Act, 2007, an employee paid monthly is entitled to twenty-eight days of notice, or pay in lieu (section 36).", "metadata": {"case_sources": [{"case_id": "case-77", "title": "Kenya Airways Limited v Aviation & Allied Workers Union Kenya [2014] eKLR", "citation": "[2014] eKLR"}], "status": "completed"}}}
+{"server": {"type": "stream.end"}}
+{"close": 1000, "reason": "stream.end"}

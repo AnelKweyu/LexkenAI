@@ -1,0 +1,11 @@
+{
+  "method": "POST",
+  "path": "/ai/document-bundles/add-documents/",
+  "status": 200,
+  "body": {
+    "status": "not_applied",
+    "option_id": "suits:suit_9",
+    "reason": "This bundle is not yet managed in the document catalogue."
+  },
+  "note": "documented from source, not recorded: ai/views_document_bundles.py DocumentBundleAddDocumentsView (prod_staging f33be2a)."
+}

@@ -63,3 +63,27 @@ auth#D1
 auth#D2
 auth#D3
 auth#D4
+
+# Chat area (P2, 2026-10-13). Replaced by the identity bridge: the route auth probe and the
+# Lawris token refresh (§0.2).
+chat#r1
+chat#r3
+# Dislike screenshots: `POST /upload` has no Django route (ask #4); dislike without screenshots is r23.
+chat#r22
+# Share-this-chat modal: F10 (P7). Fill placeholders: F6 (P5).
+chat#r30
+chat#r31
+# Legal options, generation runs, task status, run cancel, DMS tool status: F6 / F11 (P5).
+chat#r32
+chat#r34
+chat#r35
+chat#r36
+chat#r37
+# Token pricing: no caller (§0.7).
+chat#r51
+# AI-action email: launched only from PMS, which is disabled on the web (§0.7).
+chat#r55
+chat#r56
+# Notifications: F11 (P5).
+chat#r57
+chat#r58

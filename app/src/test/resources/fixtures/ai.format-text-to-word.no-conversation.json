@@ -1,0 +1,9 @@
+{
+  "method": "POST",
+  "path": "/ai/format-text-to-word/",
+  "status": 404,
+  "body": {
+    "error": "Conversation not found or access denied"
+  },
+  "note": "documented from source, not recorded: ai/views.py FormatTextToWordDocView (prod_staging f33be2a)."
+}

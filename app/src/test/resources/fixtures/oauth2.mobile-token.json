@@ -1,0 +1,12 @@
+{
+  "host": "vf",
+  "method": "POST",
+  "path": "/oauth2/mobile-token/",
+  "status": 200,
+  "body": {
+    "access_token": "vf-access-1",
+    "refresh_token": "vf-refresh-1",
+    "expires_in": 900,
+    "token_type": "Bearer"
+  }
+}

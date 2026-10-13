@@ -1,0 +1,21 @@
+{
+  "host": "vf",
+  "method": "POST",
+  "path": "/authentication/signup/",
+  "status": 400,
+  "body": {
+    "password": [
+      "This field is required."
+    ],
+    "first_name": [
+      "This field is required."
+    ],
+    "last_name": [
+      "This field is required."
+    ],
+    "phone_number": [
+      "This field is required."
+    ]
+  },
+  "note": "recorded on staging 2026-09-17 with the mobile headers and an incomplete body (no account created)"
+}

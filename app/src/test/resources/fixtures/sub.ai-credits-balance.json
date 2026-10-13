@@ -1,0 +1,10 @@
+{
+  "method": "GET",
+  "path": "/sub/ai-credits-balance/",
+  "status": 200,
+  "body": {
+    "personal_ai_credits_balance": 0,
+    "subscription_ai_credits_balance": 1234,
+    "subscription_plan": "LawFirm Free"
+  }
+}

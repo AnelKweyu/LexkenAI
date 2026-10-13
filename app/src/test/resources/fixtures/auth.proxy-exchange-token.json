@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "path": "/auth/proxy-exchange-token/",
+  "status": 200,
+  "body": {
+    "ai_service_token": "lawris-jwt-1",
+    "ai_user_id": "uid-1",
+    "email": "tier1@lexken.test"
+  }
+}

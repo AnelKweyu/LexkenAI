@@ -1,0 +1,9 @@
+{
+  "method": "POST",
+  "path": "/auth/proxy-exchange-token/",
+  "status": 403,
+  "body": {
+    "detail": "The Virtual Law Firm email is not verified."
+  },
+  "note": "lexken_auth/services.py fetch_virtual_law_firm_profile: EMSRequestError(status_code=403) when the identity's email_verified is false"
+}

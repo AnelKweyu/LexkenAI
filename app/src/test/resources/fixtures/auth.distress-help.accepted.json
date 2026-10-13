@@ -1,0 +1,9 @@
+{
+  "method": "POST",
+  "path": "/auth/distress-help/",
+  "status": 202,
+  "body": {
+    "status": "accepted",
+    "message": "Your help request has been received. Our team will respond within 24 hours."
+  }
+}

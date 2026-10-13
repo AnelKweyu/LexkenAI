@@ -1,0 +1,10 @@
+{
+  "host": "vf",
+  "method": "POST",
+  "path": "/authentication/signup/",
+  "status": 400,
+  "body": {
+    "detail": "reCAPTCHA verification failed."
+  },
+  "note": "recorded on staging 2026-09-17 WITHOUT the mobile headers — the shape a caller sees when the bypass is missing"
+}

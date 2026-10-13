@@ -4,6 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.appdistribution)
 }
@@ -106,6 +107,8 @@ android {
     }
 
     testOptions {
+        // JVM unit tests run on JUnit 5 (Jupiter); the instrumented suite stays on AndroidJUnit4.
+        unitTests.all { it.useJUnitPlatform() }
         // Gradle Managed Devices for instrumented tests: `./gradlew pixel6api34StagingDebugAndroidTest`.
         managedDevices.localDevices {
             create("pixel6api34") {
@@ -148,7 +151,28 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    testImplementation(libs.junit)
+
+    // core: coroutines, serialization, DataStore
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.datastore.preferences)
+
+    // core/network: Retrofit on OkHttp (REST + WebSocket)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+
+    // DI
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+
+    testImplementation(libs.bundles.unit.test)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)

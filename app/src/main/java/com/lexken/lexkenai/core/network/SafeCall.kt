@@ -15,15 +15,13 @@ import kotlin.coroutines.coroutineContext
  * Runs a network [block] and converts every expected failure into a typed [DataError.Network].
  * [CancellationException] is always rethrown so structured concurrency is preserved.
  */
-suspend inline fun <T> safeCall(crossinline block: suspend () -> T): Result<T, DataError.Network> {
-    return try {
-        Result.Success(block())
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: Throwable) {
-        coroutineContext.ensureActive()
-        Result.Failure(e.toNetworkError())
-    }
+suspend inline fun <T> safeCall(crossinline block: suspend () -> T): Result<T, DataError.Network> = try {
+    Result.Success(block())
+} catch (e: CancellationException) {
+    throw e
+} catch (e: Throwable) {
+    coroutineContext.ensureActive()
+    Result.Failure(e.toNetworkError())
 }
 
 fun Throwable.toNetworkError(): DataError.Network = when (this) {

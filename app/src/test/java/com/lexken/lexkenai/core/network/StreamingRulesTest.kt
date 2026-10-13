@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 
 /** The reconnect backoff, the socket urls and the frame-over-poll rules. */
 class StreamingRulesTest {
-
     private enum class Stage { UPLOAD, VERIFY, PARSE }
 
     @Test

@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "path": "/ai/session/",
+  "status": 403,
+  "body": {
+    "code": "turnstile_required",
+    "message": "Authentication failed."
+  },
+  "note": "documented from source, not recorded: security/permissions.py BaseTurnstileRequired._error_payload (prod_staging f33be2a). This is what every mobile principal gets from the mint until backend ask #1 (a native X-AI-Session mint) lands."
+}

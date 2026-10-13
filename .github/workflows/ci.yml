@@ -32,8 +32,14 @@ jobs:
         run: ./gradlew :app:assembleStagingRelease :app:assembleProdRelease --stacktrace
       - name: Unit tests
         run: ./gradlew :app:testStagingDebugUnitTest :app:testProdDebugUnitTest --continue
+      - name: Coverage gate (Kover)
+        run: ./gradlew :app:koverVerifyStagingDebug :app:koverHtmlReportStagingDebug
+      - name: Style and static analysis (ktlint, detekt)
+        run: ./gradlew ktlintCheck detekt --continue
       - name: Lint
         run: ./gradlew :app:lintStagingDebug
+      - name: Parity coverage (skips when the appendix is not on the runner)
+        run: bash tools/parity-coverage.sh
       - name: Upload reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -41,5 +47,8 @@ jobs:
           name: reports
           path: |
             app/build/reports/tests/**
+            app/build/reports/kover/**
             app/build/reports/lint-results-*.html
+            build/reports/ktlint/**
+            build/reports/detekt/**
           if-no-files-found: ignore

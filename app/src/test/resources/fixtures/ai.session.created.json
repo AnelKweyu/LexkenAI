@@ -1,0 +1,11 @@
+{
+  "method": "POST",
+  "path": "/ai/session/",
+  "status": 200,
+  "body": {
+    "ai_session": "ais-8c2f6e41",
+    "expires_in": 600,
+    "code": "ai_session_created"
+  },
+  "note": "documented from source, not recorded: ai/views.py AISessionInitView (prod_staging f33be2a) answers {ai_session, expires_in, code} once the Turnstile gate passes. Re-record the day backend ask #1 ships a mobile mint."
+}

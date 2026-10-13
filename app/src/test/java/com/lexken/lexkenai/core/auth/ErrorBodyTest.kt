@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test
 
 /** The dialects of a non-2xx body across the two hosts, and the sentence each one yields. */
 class ErrorBodyTest {
-
     private val json = Json { ignoreUnknownKeys = true }
 
     private fun parse(text: String): ErrorBody? = parseErrorBody(json, text)

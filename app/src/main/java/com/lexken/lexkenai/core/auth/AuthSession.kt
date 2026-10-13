@@ -41,7 +41,6 @@ class AuthSession(
     private val sessionRepository: SessionRepository,
     private val json: Json = Json { ignoreUnknownKeys = true },
 ) : AuthRepository {
-
     /**
      * The mint that answered `two_factor_enabled` — held in memory only so the interim token
      * never reaches navigation, saved state or disk. Process death forfeits it by design.
@@ -75,7 +74,10 @@ class AuthSession(
             return Result.Success(SignInOutcome.MfaRequired(vfTokens.otpDeliveryMethod.toOtpDelivery()))
         }
         return when (val completed = exchangeAndComplete(vfTokens)) {
-            is Result.Success -> Result.Success(SignInOutcome.SignedIn)
+            is Result.Success -> {
+                Result.Success(SignInOutcome.SignedIn)
+            }
+
             is Result.Failure -> {
                 // The exchange knows the email is unverified; remember the credentials so the
                 // code screen can finish the sign-in the way a registration does.
@@ -150,14 +152,19 @@ class AuthSession(
                 pendingCredentials = PendingCredentials(email, password)
                 Result.Success(Unit)
             }
-            is Result.Failure -> Result.Failure(
-                when {
-                    // DRF's unique validator: {"email": ["user with this email already exists."]}
-                    result.error.body?.field("email")?.contains("exist", ignoreCase = true) == true -> AuthError.EmailAlreadyRegistered
-                    result.error.network == DataError.Network.CONFLICT -> AuthError.EmailAlreadyRegistered
-                    else -> AuthError.Data(result.error.network)
-                },
-            )
+
+            is Result.Failure -> {
+                Result.Failure(
+                    when {
+                        // DRF's unique validator: {"email": ["user with this email already exists."]}
+                        result.error.body?.field("email")?.contains("exist", ignoreCase = true) == true -> AuthError.EmailAlreadyRegistered
+
+                        result.error.network == DataError.Network.CONFLICT -> AuthError.EmailAlreadyRegistered
+
+                        else -> AuthError.Data(result.error.network)
+                    },
+                )
+            }
         }
     }
 
@@ -197,6 +204,7 @@ class AuthSession(
         }
         return when (result) {
             is Result.Success -> Result.Success(Unit)
+
             is Result.Failure -> Result.Failure(
                 when {
                     result.error.mentions("already verified") -> AuthError.AlreadyVerified
@@ -213,6 +221,7 @@ class AuthSession(
         }
         return when (result) {
             is Result.Success -> Result.Success(PhoneOtpDelivery(result.data.channel.toOtpDelivery()))
+
             is Result.Failure -> Result.Failure(
                 when {
                     result.error.network == DataError.Network.UNAUTHORIZED -> AuthError.MfaSessionExpired.also { heldMint = null }
@@ -228,11 +237,16 @@ class AuthSession(
         val held = heldMint ?: return Result.Failure(AuthError.MfaSessionExpired)
         val result = httpCall(json) {
             accountApi.confirmPhoneCode(
-                config.bypassKey, nonce(), config.bundleId, "Bearer ${held.accessToken}", PhoneCodeConfirmRequest(code),
+                config.bypassKey,
+                nonce(),
+                config.bundleId,
+                "Bearer ${held.accessToken}",
+                PhoneCodeConfirmRequest(code),
             )
         }
         return when (result) {
             is Result.Success -> Result.Success(Unit)
+
             is Result.Failure -> Result.Failure(
                 when {
                     result.error.network == DataError.Network.UNAUTHORIZED -> AuthError.MfaSessionExpired.also { heldMint = null }
@@ -273,6 +287,7 @@ class AuthSession(
     private suspend fun exchangeAndComplete(vfTokens: VfTokenResponse): EmptyResult<AuthError> =
         when (val exchanged = httpCall(json) { exchangeApi.exchange("Bearer ${vfTokens.accessToken}") }) {
             is Result.Failure -> Result.Failure(exchanged.error.toExchangeError(vfTokens.accessToken))
+
             is Result.Success -> complete(
                 AuthTokens(accessToken = exchanged.data.aiServiceToken, refreshToken = vfTokens.refreshToken),
             )
@@ -339,6 +354,7 @@ class AuthSession(
         }
         return when (result) {
             is Result.Success -> Result.Success(Unit)
+
             is Result.Failure -> Result.Failure(
                 when {
                     result.error.body?.fieldErrors?.containsKey("token") == true -> AuthError.ResetLinkInvalid
@@ -352,8 +368,10 @@ class AuthSession(
 
     private companion object {
         const val DISTRESS_CONTEXT = "android_sign_in"
+
         /** Consumer sign-ups are individual clients on the identity host, as the Virtual Firm app registers them. */
         const val INDIVIDUAL_ACCOUNT = "individual"
+
         /** Set beside `detail` by the 2FA middleware when the email channel's address is unverified. */
         const val EMAIL_VERIFICATION_REQUIRED = "email_verification_required"
         const val INVALID_GRANT = "invalid_grant"
@@ -363,7 +381,10 @@ class AuthSession(
     private suspend fun complete(tokens: AuthTokens): EmptyResult<AuthError> {
         tokenStore.save(tokens)
         return when (val refreshed = sessionRepository.refresh()) {
-            is Result.Success -> Result.Success(Unit)
+            is Result.Success -> {
+                Result.Success(Unit)
+            }
+
             is Result.Failure -> {
                 tokenStore.clear()
                 Result.Failure(AuthError.Data(refreshed.error))
@@ -388,12 +409,30 @@ class AuthSession(
                 pendingCredentials = PendingCredentials(email, password)
                 AuthError.EmailUnverified
             }
-            body?.error == INVALID_GRANT -> AuthError.InvalidCredentials
-            body?.error != null -> AuthError.SignInBlocked(body.firstSentence ?: body.error)
-            network == DataError.Network.UNAUTHORIZED -> AuthError.InvalidCredentials
-            network == DataError.Network.UNKNOWN && body?.detail != null -> AuthError.SignInBlocked(body.detail)
-            network == DataError.Network.UNKNOWN -> AuthError.InvalidCredentials
-            else -> AuthError.Data(network)
+
+            body?.error == INVALID_GRANT -> {
+                AuthError.InvalidCredentials
+            }
+
+            body?.error != null -> {
+                AuthError.SignInBlocked(body.firstSentence ?: body.error)
+            }
+
+            network == DataError.Network.UNAUTHORIZED -> {
+                AuthError.InvalidCredentials
+            }
+
+            network == DataError.Network.UNKNOWN && body?.detail != null -> {
+                AuthError.SignInBlocked(body.detail)
+            }
+
+            network == DataError.Network.UNKNOWN -> {
+                AuthError.InvalidCredentials
+            }
+
+            else -> {
+                AuthError.Data(network)
+            }
         }
     }
 }
@@ -428,7 +467,6 @@ class AuthSessionRenewer(
     private val exchangeApi: ExchangeApi,
     private val config: VfConfig,
 ) : SessionRenewer {
-
     override suspend fun renew(current: AuthTokens): AuthTokens? {
         val refreshToken = current.refreshToken ?: return null
         val minted = vfApi.accessFromRefresh(config, refreshToken) ?: return null
@@ -448,7 +486,6 @@ class AuthSessionRevoker(
     private val accountApi: VfAccountApi,
     private val config: VfConfig,
 ) : SessionRevoker {
-
     override suspend fun revoke(tokens: AuthTokens) {
         val refresh = tokens.refreshToken ?: return
         val minted = vfApi.accessFromRefresh(config, refresh) ?: return
@@ -473,7 +510,6 @@ class IdentityPasswordChanger(
     private val tokenStore: TokenStore,
     private val json: Json = Json { ignoreUnknownKeys = true },
 ) : PasswordChanger {
-
     override suspend fun change(current: String, new: String): EmptyResult<PasswordChangeFailure> {
         val stored = tokenStore.current()
         val refresh = stored?.refreshToken
@@ -486,7 +522,10 @@ class IdentityPasswordChanger(
 
         val changed = httpCall(json) {
             accountApi.changePassword(
-                config.bypassKey, nonce(), config.bundleId, "Bearer ${minted.accessToken}",
+                config.bypassKey,
+                nonce(),
+                config.bundleId,
+                "Bearer ${minted.accessToken}",
                 VfPasswordChangeRequest(currentPassword = current, password = new),
             )
         }

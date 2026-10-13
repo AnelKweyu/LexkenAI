@@ -1,0 +1,30 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{kt,kts}]
+indent_size = 4
+max_line_length = 160
+ktlint_code_style = ktlint_official
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+# Test names are sentences in backticks; Compose functions are capitalised.
+ktlint_function_naming_ignore_when_annotated_with = Composable, Test, ParameterizedTest, TestFactory, RepeatedTest
+# Rules whose rewrites bury a review under line-wrapping noise are off; the rest of ktlint_official applies.
+ktlint_standard_multiline-expression-wrapping = disabled
+ktlint_standard_string-template-indent = disabled
+ktlint_standard_chain-method-continuation = disabled
+ktlint_standard_function-signature = disabled
+ktlint_standard_class-signature = disabled
+ktlint_standard_condition-wrapping = disabled
+ktlint_standard_if-else-wrapping = disabled
+ktlint_standard_blank-line-before-declaration = disabled
+ktlint_standard_property-naming = disabled
+ktlint_standard_max-line-length = enabled
+
+[*.{yml,yaml,json,jsonl,md,txt,py,sh}]
+indent_size = 2

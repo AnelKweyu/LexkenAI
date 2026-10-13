@@ -59,6 +59,10 @@ class InMemoryTokenStore(initial: AuthTokens? = null) : TokenStore {
     private val state = MutableStateFlow(initial)
     override val tokens: Flow<AuthTokens?> = state
     override suspend fun current(): AuthTokens? = state.value
-    override suspend fun save(tokens: AuthTokens) { state.value = tokens }
-    override suspend fun clear() { state.value = null }
+    override suspend fun save(tokens: AuthTokens) {
+        state.value = tokens
+    }
+    override suspend fun clear() {
+        state.value = null
+    }
 }

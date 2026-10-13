@@ -7,12 +7,14 @@ import com.lexken.lexkenai.core.result.Result
 
 sealed interface AuthError : Error {
     data object InvalidCredentials : AuthError
+
     /**
      * The identity host refused the sign-in and said why in a sentence of its own — e.g. the
      * account's 2FA channel is SMS but it has no phone number, or the host's rate limit. Shown
      * verbatim; nothing the app can retry on its own.
      */
     data class SignInBlocked(val message: String) : AuthError
+
     /**
      * The credentials were right but the account has two-factor on and the identity host's mobile
      * grant never issued the code: every call with the token answers 403 "Two Factor
@@ -22,26 +24,35 @@ sealed interface AuthError : Error {
      */
     data object TwoFactorBlocked : AuthError
     data object EmailAlreadyRegistered : AuthError
+
     /**
      * The identity host accepted the credentials but the account's email is not verified, so the
      * Lawris exchange refuses it (`lexken_auth/services.py`, 403 "email is not verified"). The
      * credentials are remembered so verifying the emailed code finishes the sign-in.
      */
     data object EmailUnverified : AuthError
+
     /** The reset code was wrong or has expired — the user re-enters or requests a new one. */
     data object ResetCodeInvalid : AuthError
+
     /** The emailed reset link's token is invalid, used or older than its 30-minute TTL. */
     data object ResetLinkInvalid : AuthError
+
     /** The server's password validators rejected the new password (e.g. same as the old one). */
     data object NewPasswordRejected : AuthError
+
     /** The 2FA or verification code was rejected — the user re-enters it. */
     data object OtpInvalid : AuthError
+
     /** The verification code ran out — resend and try again. */
     data object OtpExpired : AuthError
+
     /** The account (or phone) is already verified — just sign in. */
     data object AlreadyVerified : AuthError
+
     /** A phone code was requested but the account has no phone number. */
     data object NoPhoneOnAccount : AuthError
+
     /**
      * No sign-in is awaiting a step (a 2FA code, or the phone step after email verification) —
      * e.g. after process death — so the user signs in again.
@@ -61,6 +72,7 @@ enum class EmailVerificationOutcome {
      * (or skipping) finishes the sign-in.
      */
     PHONE_VERIFICATION_OFFERED,
+
     /** Verified, but the user must sign in themselves (no remembered credentials, or they failed). */
     SIGN_IN_REQUIRED,
 }
@@ -70,6 +82,7 @@ enum class OtpDelivery { SMS, WHATSAPP, EMAIL, UNKNOWN }
 
 sealed interface SignInOutcome {
     data object SignedIn : SignInOutcome
+
     /** Credentials were right but 2FA is on: a code is on its way via [delivery] — verify it next. */
     data class MfaRequired(val delivery: OtpDelivery) : SignInOutcome
 }

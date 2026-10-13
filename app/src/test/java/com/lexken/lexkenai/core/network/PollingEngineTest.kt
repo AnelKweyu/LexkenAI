@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test
 
 /** Virtual-time coverage of the cadence and terminal rules. */
 class PollingEngineTest {
-
     private val engine = PollingEngine()
     private val schedule = PollSchedule(initialMillis = 2_000, maxMillis = 10_000, capMillis = 60_000)
 

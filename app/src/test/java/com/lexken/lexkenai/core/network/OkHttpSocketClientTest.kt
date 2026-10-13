@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit
  * on the policy, and a collector cancel closing the live socket.
  */
 class OkHttpSocketClientTest {
-
     private val server = MockWebServer()
     private val client = OkHttpSocketClient(OkHttpClient())
 
@@ -124,7 +123,10 @@ class OkHttpSocketClientTest {
 
         assertThat(events.filterIsInstance<SocketEvent.Connected>().map { it.attempt }).containsExactly(0, 1)
         assertThat(events.filterIsInstance<SocketEvent.Frame>().map { it.text }).containsExactly(
-            """{"type":"pong"}""", """{"type":"task_progress"}""", """{"type":"pong"}""", """{"type":"task_notification"}""",
+            """{"type":"pong"}""",
+            """{"type":"task_progress"}""",
+            """{"type":"pong"}""",
+            """{"type":"task_notification"}""",
         )
         assertThat(events.last()).isInstanceOf<SocketEvent.Closed>()
         assertThat(server.requestCount).isEqualTo(3)

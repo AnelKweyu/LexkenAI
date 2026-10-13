@@ -20,7 +20,6 @@ class TokenAuthenticator(
     private val tokenStore: TokenStore,
     private val renewer: SessionRenewer,
 ) : Authenticator {
-
     private val lock = Mutex()
 
     override fun authenticate(route: Route?, response: Response): Request? {

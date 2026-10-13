@@ -24,6 +24,7 @@ sealed interface JobEvent<out T> {
 
     /** The job's socket connected; [attempt] is 0 for the first connect, then the reconnect count. */
     data class LiveConnected(val attempt: Int) : JobEvent<Nothing>
+
     /** A server text frame, unparsed. */
     data class Live(val frame: String) : JobEvent<Nothing>
     data class LiveClosed(val code: Int?, val reason: String?) : JobEvent<Nothing>

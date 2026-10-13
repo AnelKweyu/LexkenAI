@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.appdistribution)
+    alias(libs.plugins.kover)
 }
 
 // Backend endpoints and identity-exchange credentials are never committed: they come from
@@ -116,6 +117,38 @@ android {
                 apiLevel = 34
                 systemImageSource = "aosp-atd"
                 testedAbi = "x86_64"
+            }
+        }
+    }
+}
+
+// Coverage (Kover, JaCoCo-free): the staging debug unit tests are the measured run. The UI shell,
+// the DI wiring and generated classes are out; `core/` and every feature package are in, and the
+// gate holds the line at the level P0 measured so a feature cannot land its code without its tests.
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    "com.lexken.lexkenai.MainActivity*",
+                    "com.lexken.lexkenai.LexkenApplication",
+                    "com.lexken.lexkenai.BuildConfig",
+                    "com.lexken.lexkenai.di.*",
+                    "com.lexken.lexkenai.ui.*",
+                    "*ComposableSingletons*",
+                    // DataStore-backed stores need a device; their in-memory twins carry the contract tests.
+                    "com.lexken.lexkenai.core.auth.DataStoreTokenStore",
+                    "com.lexken.lexkenai.core.network.aisession.DataStoreDeviceIdStore",
+                )
+                annotatedBy("androidx.compose.runtime.Composable")
+            }
+        }
+        variant("stagingDebug") {
+            verify {
+                // P0 measured 79% before the DataStore exclusions; the bar only ever moves up.
+                rule("line coverage of core and features") {
+                    minBound(78)
+                }
             }
         }
     }

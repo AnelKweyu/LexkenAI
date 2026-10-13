@@ -1,0 +1,3 @@
+# Appendix request rows deliberately not built (parity plan §0.7: dead or disabled on the web),
+# one `area#id` per line. tools/parity-coverage.sh counts these as covered without a test.
+# Fill in per feature as each area enters scope, citing the §0.7 bullet in the PR.

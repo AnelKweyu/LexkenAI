@@ -72,7 +72,6 @@ sealed interface PollEvent<out T> {
  * conditions stop the loop.
  */
 class PollingEngine {
-
     fun <T> poll(
         schedule: PollSchedule,
         isTerminal: (T) -> Boolean,
@@ -89,12 +88,18 @@ class PollingEngine {
                     }
                     emit(PollEvent.Snapshot(result.data))
                 }
-                is Result.Failure -> when (result.error) {
-                    is DataError.Api -> {
-                        emit(PollEvent.Failed(result.error))
-                        return@flow
+
+                is Result.Failure -> {
+                    when (result.error) {
+                        is DataError.Api -> {
+                            emit(PollEvent.Failed(result.error))
+                            return@flow
+                        }
+
+                        else -> {
+                            emit(PollEvent.Stumble(result.error))
+                        }
                     }
-                    else -> emit(PollEvent.Stumble(result.error))
                 }
             }
             if (waited >= schedule.capMillis) {

@@ -1,0 +1,9 @@
+# /ws/ai/lawris-ai/ — one general-chat answer, as GeneralAIConsumer streams it after the join frame.
+# Recorded shape (2026-10-12 probe) with the content replaced by a plausible Kenyan employment query.
+{"client": {"thread_id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10"}}
+{"server": {"type": "stream.start", "thread_id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10"}}
+{"server": {"type": "stream.chunk", "message": "Under section 35(1)(c) of the Employment Act, 2007, "}}
+{"server": {"type": "stream.chunk", "message": "an employee on a monthly wage is entitled to at least twenty-eight days' notice of termination, "}}
+{"server": {"type": "stream.chunk", "message": "or pay in lieu of that notice (section 36)."}}
+{"server": {"type": "stream.end", "thread_id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10", "credits_used": 2}}
+{"close": 1000, "reason": "stream.end"}

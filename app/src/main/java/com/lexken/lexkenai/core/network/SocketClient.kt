@@ -21,6 +21,7 @@ sealed interface SocketEvent {
     /** The connection (re)opened; [attempt] is 0 for the first, then the reconnect count. */
     data class Connected(val attempt: Int) : SocketEvent
     data class Frame(val text: String) : SocketEvent
+
     /** The server closed the socket (`stream.end` closes the chat socket) or the link dropped. */
     data class Closed(val code: Int?, val reason: String?) : SocketEvent
 }
@@ -91,7 +92,6 @@ object SocketUrls {
  * the socket with 1000.
  */
 class OkHttpSocketClient(private val client: OkHttpClient) : SocketClient {
-
     override fun connect(url: String, openFrames: List<String>, policy: ReconnectPolicy): Flow<SocketEvent> = callbackFlow {
         var attempt = 0
         var socket: WebSocket? = null

@@ -1,3 +1,20 @@
-# Appendix request rows deliberately not built (parity plan §0.7: dead or disabled on the web),
-# one `area#id` per line. tools/parity-coverage.sh counts these as covered without a test.
-# Fill in per feature as each area enters scope, citing the §0.7 bullet in the PR.
+# Appendix request rows deliberately not built (parity plan §0.7: dead or disabled on the web, or
+# out of the mobile scope by product decision), one `area#id` per line. tools/parity-coverage.sh
+# counts these as covered without a test. Fill in per feature as each area enters scope, citing
+# the §0.7 bullet in the PR.
+
+# Admin panel (employees, SMTP, API key) — parked by product decision on 2026-10-13: the mobile app
+# is not a firm-administration surface. files-crypt-sharing-admin.md "Admin Panel" rows.
+files#r46
+files#r47
+files#r48
+files#r49
+files#r50
+files#r51
+files#r52
+files#r53
+files#r54
+files#r55
+files#r56
+files#r57
+files#r58

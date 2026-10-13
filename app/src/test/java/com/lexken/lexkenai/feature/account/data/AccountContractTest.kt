@@ -252,7 +252,7 @@ class AccountContractTest {
     }
 
     @Test
-    fun `the product update banner maps the payload, hides the seen shape, and fails open auth#59`() = runTest {
+    fun `the product update banner maps the payload, hides the seen shape, and fails open auth#59 chat#r53`() = runTest {
         server.serve("ai.product-updates.latest", "ai.product-updates.latest.seen")
         server.serve(Host.LAWRIS, "GET", "/ai/product-updates/latest/", 500, "<html>upstream</html>")
         val repository = updates()
@@ -271,7 +271,7 @@ class AccountContractTest {
     }
 
     @Test
-    fun `mark-seen posts the update key auth#60`() = runTest {
+    fun `mark-seen posts the update key auth#60 chat#r54`() = runTest {
         server.serve("ai.product-updates.mark-seen")
 
         val marked = updates().markSeen("lexken_ai_reliability_research_pii_credits_update_2026_08")

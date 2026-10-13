@@ -1,0 +1,17 @@
+{
+  "method": "GET",
+  "path": "/ai/format-task-status/fmt-task-1/",
+  "status": 200,
+  "body": {
+    "task_id": "fmt-task-1",
+    "status": "SUCCESS",
+    "result": {
+      "status": "FAILURE",
+      "error": "AI formatting error.",
+      "exc_type": "ValueError",
+      "exc_message": "empty"
+    }
+  },
+  "note": "documented from source, not recorded: ai/views.py FormatTaskStatusView (prod_staging f33be2a). The task records FAILURE inside result under a SUCCESS Celery state.",
+  "template": "/ai/format-task-status/{task_id}/"
+}

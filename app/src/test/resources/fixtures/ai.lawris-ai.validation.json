@@ -1,0 +1,14 @@
+{
+  "method": "POST",
+  "path": "/ai/lawris-ai/",
+  "status": 400,
+  "body": {
+    "error": "Validation Error",
+    "details": {
+      "prompt": [
+        "This field may not be blank."
+      ]
+    }
+  },
+  "note": "documented from source, not recorded: ai/views.py LegalAssistantView.post serializer errors (prod_staging f33be2a)."
+}

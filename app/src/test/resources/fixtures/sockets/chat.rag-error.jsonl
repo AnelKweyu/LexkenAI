@@ -1,0 +1,6 @@
+# carried over: a rag.error frame then stream.end
+{"client": {"thread_id": "thread-1"}}
+{"server": {"type": "status.update", "message": "Retrieving context"}}
+{"server": {"type": "rag.error", "error": "The retrieval pipeline failed: upstream timeout."}}
+{"server": {"type": "stream.end"}}
+{"close": 1000, "reason": "stream.end"}

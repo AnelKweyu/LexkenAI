@@ -1,0 +1,47 @@
+{
+  "method": "GET",
+  "path": "/ai/conversations/a7b8c9d0-0000-4a6b-8c7d-9e0f1a2b3c4d/messages/",
+  "template": "/ai/conversations/{conversation_id}/messages/",
+  "status": 200,
+  "note": "Documented shape (chat audit 2026-09-17, C4): a Pro-Drafter answer persists its artifact under metadata.drafting_artifact with the draft_document fields; the web's DraftDocumentPanel reads either key.",
+  "body": [
+    {
+      "id": "a7b8c9d0-0001-4a6b-8c7d-9e0f1a2b3c4d",
+      "role": "user",
+      "content": "Draft a demand letter to Ramoya for the outstanding KES 450,000.",
+      "created_at": "2026-09-17T10:02:00.000000+03:00",
+      "metadata": {
+        "ems_project_task_id": "task-artifact-1",
+        "mode": "pro_drafter"
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": []
+    },
+    {
+      "id": "a7b8c9d0-0002-4a6b-8c7d-9e0f1a2b3c4d",
+      "role": "assistant",
+      "content": "Your demand letter is ready. It gives Ramoya fourteen days to settle KES 450,000 before proceedings are filed.",
+      "created_at": "2026-09-17T10:03:12.000000+03:00",
+      "metadata": {
+        "drafting_artifact": {
+          "message_id": "a7b8c9d0-0002-4a6b-8c7d-9e0f1a2b3c4d",
+          "document_name": "Demand letter — Ramoya (KES 450,000)",
+          "file_url": "/media/daeb92d2-931c-4d9d-8710-b8a5fb35b251/AI_DRAFTS/Demand_letter_Ramoya_450k.docx",
+          "template_id": "tmpl-4f5e6d7c",
+          "template_status": "ready",
+          "placeholder_count": 2,
+          "can_replace": true,
+          "form_schema_url": "/api/dms/completion/v2/templates/tmpl-4f5e6d7c/schema/",
+          "status": "ready"
+        },
+        "status": "completed"
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": [
+        "Loading the house style",
+        "Drafting",
+        "Formatting the letter"
+      ]
+    }
+  ]
+}

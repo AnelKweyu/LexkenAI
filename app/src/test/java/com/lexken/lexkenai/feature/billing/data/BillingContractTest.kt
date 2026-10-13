@@ -62,7 +62,7 @@ class BillingContractTest {
     private fun credits() = RemoteCreditsRepository(retrofit.create())
 
     @Test
-    fun `current subscription maps the own plan, the employee assignment, and a 404 as none auth#42`() = runTest {
+    fun `current subscription maps the own plan, the employee assignment, and a 404 as none auth#42 chat#r46`() = runTest {
         server.serve("sub.current.pending-payment", "sub.current.assigned", "sub.current.none")
         val repository = subscriptions()
 
@@ -84,7 +84,7 @@ class BillingContractTest {
     }
 
     @Test
-    fun `the credits balance follows the web's or-chain and keeps the reset date auth#43`() = runTest {
+    fun `the credits balance follows the web's or-chain and keeps the reset date auth#43 chat#r45`() = runTest {
         server.serve("sub.ai-credits-balance.shared")
 
         val balance = subscriptions().creditsBalance().getOrNull()!!
@@ -205,7 +205,7 @@ class BillingContractTest {
     }
 
     @Test
-    fun `daraja status reads the receipt, and an unknown payment is a not-found auth#51`() = runTest {
+    fun `daraja status reads the receipt, and an unknown payment is a not-found auth#51 chat#r49`() = runTest {
         server.serve("sub.payments.status.success", "sub.payments.status.not-found")
         val repository = payments()
 
@@ -217,7 +217,7 @@ class BillingContractTest {
     }
 
     @Test
-    fun `paystack credits post the amount, and the subscription gate is its own outcome auth#52`() = runTest {
+    fun `paystack credits post the amount, and the subscription gate is its own outcome auth#52 chat#r48`() = runTest {
         server.serve("sub.payments.paystack.initiate_credit_purchase")
         server.serve(
             Host.LAWRIS,
@@ -238,7 +238,7 @@ class BillingContractTest {
     }
 
     @Test
-    fun `daraja credits post phone, amount and the fixed transaction description auth#53`() = runTest {
+    fun `daraja credits post phone, amount and the fixed transaction description auth#53 chat#r47`() = runTest {
         server.serve("sub.payments.initiate_credit_purchase")
 
         val started = payments().initiateCreditPurchase(CreditsPurchase(500, PaymentProvider.DARAJA, "0722334455")).getOrNull()
@@ -249,7 +249,7 @@ class BillingContractTest {
     }
 
     @Test
-    fun `credits history follows next as a relative path and flags refunds auth#54`() = runTest {
+    fun `credits history follows next as a relative path and flags refunds auth#54 chat#r50`() = runTest {
         server.serve("ai.ai-credits-history", "ai.ai-credits-history.page2")
         val repository = credits()
 
@@ -268,7 +268,7 @@ class BillingContractTest {
     }
 
     @Test
-    fun `the discount-code request hits the route without a trailing slash and reads the 201 auth#56`() = runTest {
+    fun `the discount-code request hits the route without a trailing slash and reads the 201 auth#56 chat#r52`() = runTest {
         server.serve("sub.request_discount_code", "sub.request_discount_code.no-email")
         val repository = subscriptions()
 

@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "path": "/rag/cancel-briefing/",
+  "status": 200,
+  "body": {
+    "status": "cancelled",
+    "message": "Briefing cancellation requested."
+  },
+  "note": "documented from source, not recorded: rag/views.py CancelBriefingView (prod_staging f33be2a)."
+}

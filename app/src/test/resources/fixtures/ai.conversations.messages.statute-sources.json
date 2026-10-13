@@ -1,0 +1,93 @@
+{
+  "method": "GET",
+  "path": "/ai/conversations/78472b71-2fcb-445d-941c-5cc82636d63a/messages/",
+  "template": "/ai/conversations/{conversation_id}/messages/",
+  "status": 200,
+  "body": [
+    {
+      "id": "4c3f9253-725b-4b81-9210-f660ce2e46be",
+      "role": "user",
+      "content": "traffic laws",
+      "created_at": "2026-09-11T11:07:19.655997+03:00",
+      "metadata": {
+        "ems_project_task_id": "a81f7635-3905-48c7-b707-0ec15093a22d"
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": [],
+      "mentioned_cases_list": []
+    },
+    {
+      "id": "c2a29717-c73c-47a9-9eee-8f041efc0793",
+      "role": "assistant",
+      "content": "In Kenya, road transport and motor vehicle regulations are governed primarily by the **Traffic Act (Cap 403)** and its extensive subsidiary legislation. \n\nBased on the core regulatory frameworks under the Act, here is an overview of the key subsidiary rules that dictate traffic laws and enforcement in Kenya:\n\n**1. The Traffic (Minor Offences) Rules, 2016**\nThese rules govern the handling, prosecution, and penalization of minor traffic infractions. \n*   **Enforcement:** They provide the framework for dealing with minor offences under Section 117 of the Traffic Act. \n*   **Penalties:** The rules specify a statutory maximum penalty that may be imposed for each minor traffic offence listed in its First Schedule, allowing for standardized fines and expedited resolution of minor infractions (often through instant fines).\n\n**2. The Traffic (Breathalyser) Rules, 2011**\nThese rules regulate the operation of motor vehicles in relation to the consumption of alcohol.\n*   **Blood Alcohol Concentration (BAC):** The rules define BAC as the concentration of alcohol in a person’s blood measured in terms of mass per volume. \n*   **Testing Devices:** They prescribe the use of a \"breathalyser,\" which must be a device approved by the Cabinet Secretary upon the advice of the Kenya Bureau of Standards. \n\n**3. The Traffic (Movement) Rules, 1985**\nThese rules impose specific operational timeframes for certain classes of commercial vehicles.\n*   **Night Travel Restrictions:** A commercial vehicle with a tare weight of 3 tonnes or more carrying agricultural produce is strictly prohibited from being driven on any road between 6:00 p.m. and 6:00 a.m.\n*   **Exemptions:** The rules provide an exception for vehicles carrying perishable goods which would deteriorate if prevented from moving during those hours.\n*   **Penalties:** A contravention of this rule makes both the driver and the owner liable. A first offence attracts a fine of up to Kshs 2,000 or imprisonment for up to 3 months (or both). Subsequent offences attract a fine of up to Kshs 5,000 or imprisonment for up to 6 months (or both).\n\n**4. The Traffic Act (Registration Plates) Rules, 2016**\nThese rules govern the issuance, specifications, and display of vehicle registration plates, ensuring that all motor vehicles operating on Kenyan roads are properly identified and registered under the National Transport and Safety Authority (NTSA).\n\n**5. The Traffic Signs Rules, 1974**\nThese dictate the standardization, placement, and legal effect of traffic signs, signals, and road markings. Compliance with these signs is mandatory, and failure to observe them constitutes an offence under the principal Act.\n\nIf you are dealing with a specific traffic matter—such as defending a client against a traffic offence charge, challenging a breathalyzer test, or dealing with a motor vehicle accident claim—please provide the specific details of the legal issue so that I can provide a more targeted legal analysis and relevant case law.",
+      "created_at": "2026-09-11T11:07:20.154876+03:00",
+      "metadata": {
+        "case_sources": [],
+        "statute_sources": [
+          {
+            "id": "statute_001",
+            "url": "https://new.kenyalaw.org/akn/ke/act/ln/2016/62/eng@2022-12-31",
+            "type": "statute",
+            "score": 0.7561,
+            "title": "The Traffic Act (Registration Plates) Rules",
+            "akn_uri": "/akn/ke/act/ln/2016/62/eng@2022-12-31",
+            "pdf_url": "https://lexkenbucket.sfo3.digitaloceanspaces.com/legislation/acts/act_ln_2016_62_eng_at_2022-12-31.pdf",
+            "citation": "The Traffic Act (Registration Plates) Rules",
+            "snippet": "Statute: The Traffic Act (Registration Plates) Rules Category: Acts of Parliament LAWS OF KENYA THE TRAFFIC ACT (REGISTRATION PLATES) RULES NO. 62 OF 2016 Revised and published by the National Council for Law Reporting with the authority of the Attorney-General as gazetted by the Government Printer ",
+            "metadata": {
+              "type": "statute_document_bundle",
+              "title": "The Traffic Act (Registration Plates) Rules",
+              "akn_uri": "/akn/ke/act/ln/2016/62/eng@2022-12-31",
+              "source_url": "https://new.kenyalaw.org/akn/ke/act/ln/2016/62/eng@2022-12-31/source",
+              "spaces_url": "https://lexkenbucket.sfo3.digitaloceanspaces.com/legislation/acts/act_ln_2016_62_eng_at_2022-12-31.pdf",
+              "statute_id": "750863c10915f51ab5d0e360b99a1452",
+              "category_name": "Acts of Parliament",
+              "content_type": "statute",
+              "matched_reason": "whole-document vector match"
+            }
+          },
+          {
+            "id": "statute_002",
+            "url": "https://new.kenyalaw.org/akn/ke/act/ln/2016/161/eng@2022-12-31",
+            "type": "statute",
+            "score": 0.5625,
+            "title": "The Traffic (Minor Offences) Rules",
+            "akn_uri": "/akn/ke/act/ln/2016/161/eng@2022-12-31",
+            "pdf_url": "https://lexkenbucket.sfo3.digitaloceanspaces.com/legislation/acts/act_ln_2016_161_eng_at_2022-12-31.pdf",
+            "citation": "The Traffic (Minor Offences) Rules",
+            "snippet": "LE [r. 2] ....................................................................................................................................................................................... 1 SECOND SCHEDULE [r. 4] .................................................................................",
+            "metadata": {
+              "type": "statute_document_bundle",
+              "title": "The Traffic (Minor Offences) Rules",
+              "akn_uri": "/akn/ke/act/ln/2016/161/eng@2022-12-31",
+              "source_url": "https://new.kenyalaw.org/akn/ke/act/ln/2016/161/eng@2022-12-31/source",
+              "spaces_url": "https://lexkenbucket.sfo3.digitaloceanspaces.com/legislation/acts/act_ln_2016_161_eng_at_2022-12-31.pdf",
+              "statute_id": "8d6df28d41c6c9de7684212e54b9b296",
+              "category_name": "Acts of Parliament",
+              "content_type": "statute",
+              "matched_reason": "whole-document vector match"
+            }
+          }
+        ],
+        "grounding_sources": [],
+        "grounding_supports": [],
+        "search_queries": [],
+        "retrieval_plan": {
+          "reason": "The user is asking about a new legal topic, and statutes are the primary source for codified traffic laws in Kenya.",
+          "source": "model",
+          "needs_web": false,
+          "reuse_memory": false,
+          "needs_case_law": false,
+          "needs_statutes": true,
+          "research_query": "Kenyan traffic laws"
+        },
+        "credits_charged": 5,
+        "status": "complete"
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": [],
+      "mentioned_cases_list": []
+    }
+  ],
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

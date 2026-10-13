@@ -1,0 +1,38 @@
+{
+  "method": "GET",
+  "path": "/api/drafting/playbooks/lease_agreement/versions/",
+  "status": 200,
+  "body": {
+    "current_version": 3,
+    "versions": [
+      {
+        "id": "v-3",
+        "version": 3,
+        "change_type": "edit",
+        "edited_by": {
+          "id": "u",
+          "name": "Wanjiru Mwangi",
+          "email": "wanjiru@mwangiotieno.co.ke"
+        },
+        "stats": {
+          "additions": 4,
+          "deletions": 1
+        },
+        "created_at": "2026-10-10T08:00:00+03:00"
+      },
+      {
+        "id": "v-1",
+        "version": 1,
+        "change_type": "seed",
+        "edited_by": null,
+        "stats": {
+          "additions": 40,
+          "deletions": 0
+        },
+        "created_at": "2026-09-01T08:00:00+03:00"
+      }
+    ]
+  },
+  "note": "documented from source, not recorded: drafting/views.py PlaybookVersionListView (prod_staging f33be2a).",
+  "template": "/api/drafting/playbooks/{document_type}/versions/"
+}

@@ -1,0 +1,7 @@
+{
+  "method": "DELETE",
+  "path": "/ai/conversations/a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10/",
+  "status": 204,
+  "body": "",
+  "note": "documented from source, not recorded: ai/views.py ConversationDetailAPIView (prod_staging f33be2a)."
+}

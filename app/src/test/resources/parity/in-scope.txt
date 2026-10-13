@@ -1,5 +1,6 @@
 # Appendix areas whose feature has landed, one per line. tools/parity-coverage.sh fails the
 # build when a request row of a listed area has no T2 test carrying its tag (`area#id`).
 # Area keys: auth chat tools contracts dms research files pms
-# P1 (account + billing) brought the auth area into scope.
+# P1 (account + billing) brought the auth area into scope; P2 (chat) the chat area.
 auth
+chat

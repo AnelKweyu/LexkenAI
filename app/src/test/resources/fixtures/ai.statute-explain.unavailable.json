@@ -1,0 +1,9 @@
+{
+  "method": "POST",
+  "path": "/ai/statute-explain/",
+  "status": 503,
+  "body": {
+    "detail": "The statute reader is unavailable."
+  },
+  "note": "documented from source, not recorded: ai/views_statute_detail.py StatuteExplainView (prod_staging f33be2a)."
+}

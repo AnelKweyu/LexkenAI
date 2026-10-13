@@ -1,0 +1,7 @@
+# documented from ai/views.py + submission_analyzer_tasks.py: the assistant hands a pleadings analysis off, reports progress, completes; the client re-reads the thread
+{"client": {"thread_id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10"}}
+{"server": {"type": "tool.submission_analysis_started", "data": {"tool": "submission_analyzer", "mode": "full", "status": "started", "session_id": "sess-koech-1", "document_name": "koech-submissions.docx"}}}
+{"server": {"type": "submission.status", "message": "Extracting cited authorities"}}
+{"server": {"type": "submission.verifying_case", "case_name": "Kamau v Republic [2018] eKLR"}}
+{"server": {"type": "submission.complete"}}
+{"close": 1000, "reason": "done"}

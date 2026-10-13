@@ -1,0 +1,224 @@
+{
+  "method": "GET",
+  "path": "/ai/legal-options/",
+  "status": 200,
+  "body": {
+    "suits": [
+      {
+        "id": "suit_1",
+        "name": "Road Traffic Accident Claim",
+        "typical_role": "Plaintiff",
+        "required_documents": [
+          {
+            "name": "Demand Letter",
+            "required": true
+          },
+          {
+            "name": "Plaint",
+            "required": true
+          },
+          {
+            "name": "Summons to Enter Appearance",
+            "required": false
+          },
+          {
+            "name": "Verifying Affidavit",
+            "required": true
+          },
+          {
+            "name": "List of Witnesses",
+            "required": true
+          },
+          {
+            "name": "List of Documents",
+            "required": true
+          },
+          {
+            "name": "Witness Statements",
+            "required": true
+          }
+        ]
+      },
+      {
+        "id": "suit_2",
+        "name": "Breach of Contract / Claim for Debt",
+        "typical_role": "Plaintiff",
+        "required_documents": [
+          {
+            "name": "Demand Letter",
+            "required": true
+          },
+          {
+            "name": "Plaint",
+            "required": true
+          },
+          {
+            "name": "Summons to Enter Appearance",
+            "required": false
+          },
+          {
+            "name": "Verifying Affidavit",
+            "required": true
+          },
+          {
+            "name": "List of Documents",
+            "required": true
+          },
+          {
+            "name": "List of Witnesses",
+            "required": true
+          },
+          {
+            "name": "Witness Statements",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "applications": [
+      {
+        "id": "app_1",
+        "name": "Injunction (Interim or Permanent)",
+        "typical_role": "Applicant",
+        "required_documents": [
+          {
+            "name": "Certificate of Urgency",
+            "required": true
+          },
+          {
+            "name": "Notice of Motion",
+            "required": true
+          },
+          {
+            "name": "Supporting Affidavit",
+            "required": true
+          },
+          {
+            "name": "Draft Order",
+            "required": true
+          },
+          {
+            "name": "List of Documents",
+            "required": true
+          },
+          {
+            "name": "Written Submissions (optional)",
+            "required": true
+          }
+        ]
+      },
+      {
+        "id": "app_2",
+        "name": "Stay of Execution",
+        "typical_role": "Applicant",
+        "required_documents": [
+          {
+            "name": "Certificate of Urgency",
+            "required": true
+          },
+          {
+            "name": "Notice of Motion",
+            "required": true
+          },
+          {
+            "name": "Supporting Affidavit",
+            "required": true
+          },
+          {
+            "name": "Decree or Judgment",
+            "required": false
+          },
+          {
+            "name": "List of Documents",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "conveyancing": [
+      {
+        "id": "convey_1",
+        "name": "Suit for Specific Performance of Land Sale Agreement",
+        "module": "Conveyancing",
+        "typical_role": "Purchaser/Plaintiff",
+        "required_documents": [
+          {
+            "name": "Demand Letter",
+            "required": true
+          },
+          {
+            "name": "Plaint or Originating Summons",
+            "required": true
+          },
+          {
+            "name": "Supporting/Verifying Affidavit",
+            "required": true
+          },
+          {
+            "name": "Signed Sale Agreement",
+            "required": true
+          },
+          {
+            "name": "Proof of Payment",
+            "required": true
+          },
+          {
+            "name": "Official Title Search",
+            "required": true
+          }
+        ]
+      },
+      {
+        "id": "convey_2",
+        "name": "Claim for Adverse Possession",
+        "module": "Conveyancing",
+        "typical_role": "Applicant",
+        "required_documents": [
+          {
+            "name": "Originating Summons",
+            "required": true
+          },
+          {
+            "name": "Supporting Affidavit",
+            "required": true
+          },
+          {
+            "name": "Affidavits from neighbours/elders",
+            "required": true
+          },
+          {
+            "name": "Letter from Chief confirming occupation",
+            "required": false
+          },
+          {
+            "name": "Official Title Search",
+            "required": true
+          },
+          {
+            "name": "Surveyor's Report/Sketch Map",
+            "required": false
+          }
+        ]
+      }
+    ],
+    "submissions": [
+      {
+        "id": "sub_1",
+        "name": "Written Submissions — Civil Suit",
+        "typical_role": "Plaintiff",
+        "module": "submissions",
+        "required_documents": [
+          {
+            "name": "Written Submissions",
+            "required": true
+          },
+          {
+            "name": "List of Authorities",
+            "required": true
+          }
+        ]
+      }
+    ]
+  },
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

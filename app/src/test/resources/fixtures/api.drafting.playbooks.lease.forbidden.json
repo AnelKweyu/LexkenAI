@@ -1,0 +1,10 @@
+{
+  "method": "PUT",
+  "path": "/api/drafting/playbooks/lease_agreement/",
+  "status": 403,
+  "body": {
+    "detail": "Only a firm administrator can change the firm's drafting playbooks. You can still view them and draft with them."
+  },
+  "note": "documented from source, not recorded: drafting/permissions.py CanEditPlaybook (prod_staging f33be2a).",
+  "template": "/api/drafting/playbooks/{document_type}/"
+}

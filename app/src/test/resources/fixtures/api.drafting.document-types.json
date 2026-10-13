@@ -1,0 +1,88 @@
+{
+  "method": "GET",
+  "path": "/api/drafting/document-types/",
+  "status": 200,
+  "body": {
+    "document_types": [
+      {
+        "key": "land_sale_agreement",
+        "playbook": "land_sale_agreement",
+        "label": "Land sale agreement",
+        "structured": true
+      },
+      {
+        "key": "letter_of_offer",
+        "playbook": "letter_of_offer",
+        "label": "Letter of offer",
+        "structured": false
+      },
+      {
+        "key": "written_submissions",
+        "playbook": "written_submissions",
+        "label": "Written submissions",
+        "structured": false
+      },
+      {
+        "key": "lease_agreement",
+        "playbook": "lease_agreement",
+        "label": "Lease agreement",
+        "structured": true
+      },
+      {
+        "key": "non_disclosure_agreement",
+        "playbook": "non_disclosure_agreement",
+        "label": "Non-disclosure agreement",
+        "structured": false
+      },
+      {
+        "key": "loan_agreement",
+        "playbook": "loan_agreement",
+        "label": "Loan agreement",
+        "structured": true
+      },
+      {
+        "key": "joint_venture_agreement",
+        "playbook": "joint_venture_agreement",
+        "label": "Joint venture agreement",
+        "structured": false
+      },
+      {
+        "key": "services_agreement",
+        "playbook": "services_agreement",
+        "label": "Services agreement",
+        "structured": false
+      },
+      {
+        "key": "employment_contract",
+        "playbook": "employment_contract",
+        "label": "Employment contract",
+        "structured": true
+      },
+      {
+        "key": "influencer_agreement",
+        "playbook": "influencer_agreement",
+        "label": "Influencer agreement",
+        "structured": false
+      }
+    ],
+    "output_formats": [
+      {
+        "value": "text",
+        "label": "Text only"
+      },
+      {
+        "value": "docx",
+        "label": "Word document"
+      },
+      {
+        "value": "both",
+        "label": "Text + Word"
+      }
+    ],
+    "default_output_format": "docx",
+    "default_jurisdiction": "Kenya",
+    "can_edit_playbooks": true,
+    "house_style_available": false
+  },
+  "note": "documented from source, not recorded: drafting/views.py DocumentTypeRegistryView (prod_staging f33be2a)."
+}

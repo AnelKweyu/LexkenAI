@@ -1,0 +1,5 @@
+# documented from rag/views.py PDFChatFollowUpView + GeneralAIConsumer: the brief modal's follow-up joined with register_thread (the consumer reads only thread_id)
+{"client": {"type": "register_thread", "thread_id": "d4e5f6a7-b8c9-4d0e-9f1a-2b3c4d5e6f70"}}
+{"server": {"type": "rag_progress", "content": "Reading the judgment..."}}
+{"server": {"type": "rag_final_response", "content": "The lease named fourteen days; the court held s. 57 fixed the floor at one full rent period.", "message_id": "m-9"}}
+{"close": 1000, "reason": "done"}

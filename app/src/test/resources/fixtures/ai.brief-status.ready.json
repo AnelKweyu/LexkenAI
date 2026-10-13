@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/ai/brief-status/brief-export-task-1/",
+  "template": "/ai/brief-status/{task_id}/",
+  "status": 200,
+  "body": "%PDF-1.4 Karanja v Mwaura — case brief (recorded stand-in for the generated file bytes)",
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

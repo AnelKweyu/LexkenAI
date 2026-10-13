@@ -1,0 +1,9 @@
+{
+  "method": "POST",
+  "path": "/ai/lawris-ai/",
+  "status": 500,
+  "body": {
+    "error": "An unexpected server error occurred."
+  },
+  "note": "documented from source, not recorded: ai/views.py LegalAssistantView.post (prod_staging f33be2a)."
+}

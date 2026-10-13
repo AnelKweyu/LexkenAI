@@ -1,0 +1,18 @@
+{
+  "method": "POST",
+  "path": "/ai/feedback-ai",
+  "status": 201,
+  "body": {
+    "id": "5c546463-57cf-41e7-8757-9ff299176eb5",
+    "conversation": "78472b71-2fcb-445d-941c-5cc82636d63a",
+    "response_id": "c2a29717-c73c-47a9-9eee-8f041efc0793",
+    "feedback_type": "like",
+    "prompt": "Is a summary dismissal without a s.41 hearing unfair?",
+    "answer": "Under section 41 of the Employment Act 2007 …",
+    "details": "",
+    "screenshots": [],
+    "created_at": "2026-09-14T20:26:44.762389+03:00",
+    "user": "daeb92d2-931c-4d9d-8710-b8a5fb35b251"
+  },
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

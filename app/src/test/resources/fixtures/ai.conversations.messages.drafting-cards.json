@@ -1,0 +1,141 @@
+{
+  "method": "GET",
+  "path": "/ai/conversations/b0a1c2d3-e4f5-4a6b-8c7d-9e0f1a2b3c4d/messages/",
+  "template": "/ai/conversations/{id}/messages/",
+  "status": 200,
+  "body": [
+    {
+      "id": "d1a2b3c4-0001-4a6b-8c7d-9e0f1a2b3c4d",
+      "role": "user",
+      "content": "Draft the bundle for the Ramoya adverse possession claim in Busia.",
+      "created_at": "2026-09-14T19:00:00.000000+03:00",
+      "metadata": {
+        "ems_project_task_id": "task-cards-1"
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": []
+    },
+    {
+      "id": "d1a2b3c4-0002-4a6b-8c7d-9e0f1a2b3c4d",
+      "role": "assistant",
+      "content": "I found the **Land dispute bundle** for this matter. Confirm the documents below and I will start drafting.",
+      "created_at": "2026-09-14T19:00:20.000000+03:00",
+      "metadata": {
+        "case_sources": [],
+        "statute_sources": [],
+        "grounding_sources": [
+          {
+            "uri": "https://www.judiciary.go.ke/adverse-possession-guide",
+            "title": "Adverse possession in Kenya — a practitioner's guide"
+          },
+          {
+            "uri": "https://new.kenyalaw.org/legislation/limitation-of-actions",
+            "title": "Limitation of Actions Act — Kenya Law"
+          }
+        ],
+        "grounding_supports": [
+          {
+            "text": "Twelve years of open, continuous and uninterrupted possession extinguishes the registered owner's title.",
+            "start_index": 0,
+            "end_index": 96,
+            "chunk_indices": [
+              0
+            ]
+          }
+        ],
+        "document_bundle_offer": {
+          "option_id": "land-dispute",
+          "option_name": "Land dispute",
+          "status": "pending",
+          "documents": [
+            {
+              "name": "Plaint",
+              "required": true
+            },
+            {
+              "name": "Verifying affidavit",
+              "required": true
+            },
+            {
+              "name": "List of documents",
+              "required": false
+            },
+            {
+              "name": "Notice of motion",
+              "required": false
+            }
+          ],
+          "suggested_documents": [
+            "Plaint",
+            "Verifying affidavit",
+            "List of documents"
+          ],
+          "default_document_limit": 2
+        },
+        "bundle_addition_offer": {
+          "status": "pending",
+          "option_id": "land-dispute",
+          "option_name": "Land dispute",
+          "documents": [
+            "Witness statement — Ramoya"
+          ],
+          "current_bundle": [
+            "Plaint",
+            "Verifying affidavit"
+          ],
+          "proposed_bundle": [
+            "Plaint",
+            "Verifying affidavit",
+            "Witness statement — Ramoya"
+          ]
+        },
+        "retrieval_plan": {
+          "needs_web": true,
+          "needs_case_law": false,
+          "needs_statutes": false,
+          "source": "model"
+        },
+        "credits_charged": 5,
+        "status": "complete"
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": [
+        "Retrieving context",
+        "Choosing a bundle"
+      ]
+    },
+    {
+      "id": "d1a2b3c4-0003-4a6b-8c7d-9e0f1a2b3c4d",
+      "role": "assistant",
+      "content": "Drafting started. The demand letter is rendered below while the bundle runs.",
+      "created_at": "2026-09-14T19:02:00.000000+03:00",
+      "metadata": {
+        "document_generation": {
+          "option_id": "land-dispute",
+          "option_name": "Land dispute bundle",
+          "documents": [
+            "Plaint",
+            "Verifying affidavit"
+          ],
+          "generation_run_id": "4c1d2e3f-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+          "status": "complete"
+        },
+        "draft_document": {
+          "message_id": "d1a2b3c4-0003-4a6b-8c7d-9e0f1a2b3c4d",
+          "document_name": "Demand letter — Ramoya",
+          "file_url": "/media/daeb92d2-931c-4d9d-8710-b8a5fb35b251/AI_DRAFTS/Demand_letter_Ramoya.docx",
+          "template_id": "tmpl-9e8f7a6b",
+          "template_status": "ready",
+          "placeholder_count": 3,
+          "can_replace": true,
+          "form_schema_url": "/api/dms/completion/v2/templates/tmpl-9e8f7a6b/schema/",
+          "status": "ready"
+        },
+        "status": "complete"
+      },
+      "associated_cases_details": [],
+      "ragProgressSteps": []
+    }
+  ],
+  "note": "recorded on stage.lexken.ai by the LexKenAIAndroid contract suite (2026-08/09) and carried over; keys cross-checked against the Django views on prod_staging f33be2a on 2026-10-13"
+}

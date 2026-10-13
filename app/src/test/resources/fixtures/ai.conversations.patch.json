@@ -1,0 +1,18 @@
+{
+  "method": "PATCH",
+  "path": "/ai/conversations/a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10/",
+  "status": 200,
+  "body": {
+    "id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10",
+    "user": {
+      "id": "daeb92d2-931c-4d9d-8710-b8a5fb35b251",
+      "full_name": "Wanjiru Mwangi"
+    },
+    "title": "[General AI] Notice period under the Employment Act",
+    "backend_thread_id": null,
+    "created_at": "2026-10-13T06:00:00+03:00",
+    "last_updated": "2026-10-13T06:20:00+03:00",
+    "metadata": {}
+  },
+  "note": "documented from source, not recorded: ai/views.py ConversationDetailAPIView (ConversationSerializer) (prod_staging f33be2a)."
+}

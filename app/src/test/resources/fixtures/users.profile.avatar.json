@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "path": "/users/profile/avatar/",
+  "status": 200,
+  "body": {
+    "message": "Avatar updated successfully.",
+    "avatar_url": "https://stage.lexken.ai/media/avatars/user_41/wanjiru-profile.png"
+  },
+  "note": "documented from source, not recorded: users/views.py UserAvatarUploadView (prod_staging f33be2a) answers {message, avatar_url} with an absolute URL; multipart field `avatar`. A JSON body is a 415."
+}

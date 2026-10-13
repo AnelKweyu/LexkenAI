@@ -61,12 +61,26 @@ data class NavInfoDto(
     @SerialName("avatar_url") val avatarUrl: String? = null,
 )
 
+/**
+ * `sub/ai-credits-balance/` (`subscription/views.py` `UserAICreditsBalanceView`): the
+ * subscription balance is null for an account with no plan, and the `shared_*` keys appear only
+ * for an employee under a firm's shared limit.
+ */
 @Serializable
 data class CreditsBalanceDto(
     @SerialName("personal_ai_credits_balance") val personal: Int = 0,
-    @SerialName("subscription_ai_credits_balance") val subscription: Int = 0,
+    @SerialName("subscription_ai_credits_balance") val subscription: Int? = null,
+    @SerialName("shared_credit_monthly_usage_limit") val sharedMonthlyLimit: Int? = null,
+    @SerialName("ai_credits_reset_date") val resetDate: String? = null,
     @SerialName("subscription_plan") val planName: String? = null,
-)
+) {
+    /**
+     * `creditService.jsx:8-13`: `subscription || personal || shared_limit || 0` — JavaScript's
+     * `||`, so the first value that is neither null nor zero wins; never summed.
+     */
+    val balance: Int
+        get() = listOf(subscription, personal, sharedMonthlyLimit).firstOrNull { it != null && it != 0 }?.coerceAtLeast(0) ?: 0
+}
 
 /**
  * Session backed by the tenant host: nav-info + credits balance define SignedIn.
@@ -116,7 +130,7 @@ class RemoteSessionRepository(
                         role = nav.roleName.toUserRole(),
                         firmName = firmName?.takeIf { it.isNotBlank() },
                     ),
-                    credits = Credits((credits.personal + credits.subscription).coerceAtLeast(0)),
+                    credits = Credits(credits.balance),
                     subscriptionExpired = expired,
                 )
                 _state.value = signedIn

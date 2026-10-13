@@ -1,0 +1,9 @@
+{
+  "method": "DELETE",
+  "path": "/users/profile/delete_account/",
+  "status": 204,
+  "body": {
+    "message": "Account deleted successfully."
+  },
+  "note": "documented from source, not recorded: users/views.py DeleteAccountView (prod_staging f33be2a) returns 204 with a JSON body. With a Content-Length OkHttp refuses the response (ProtocolException: HTTP 204 had non-zero Content-Length); the repository treats that refusal as the success it is."
+}

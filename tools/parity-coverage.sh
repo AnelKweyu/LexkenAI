@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Parity coverage gate (parity plan §1, §5): every request row of an in-scope appendix area must
-# have a contract test whose name carries the row's tag, e.g. `[auth#12]`.
+# have a contract test whose name carries the row's tag, e.g. `auth#12`.
 #
 #   tools/parity-coverage.sh                 # appendix at $PARITY_APPENDIX or the Desktop default
 #   PARITY_APPENDIX=/path/to/appendix tools/parity-coverage.sh

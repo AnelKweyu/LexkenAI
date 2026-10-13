@@ -41,6 +41,8 @@ fun com.android.build.api.dsl.ApplicationProductFlavor.backend(apiBase: String) 
     buildConfigField("String", "VF_CLIENT_SECRET", "\"${secret("lexken.vf.clientSecret")}\"")
     buildConfigField("String", "VF_AUTH_BYPASS", "\"${secret("lexken.vf.bypassKey")}\"")
     buildConfigField("String", "VF_BUNDLE_ID", "\"${secret("lexken.vf.bundleId", "com.lexken.mobile")}\"")
+    // The payment rail, as the web's VITE_PAYMENT_PROVIDER: "paystack" (default) or "daraja".
+    buildConfigField("String", "PAYMENT_PROVIDER", "\"${secret("lexken.paymentProvider", "paystack")}\"")
 }
 
 android {

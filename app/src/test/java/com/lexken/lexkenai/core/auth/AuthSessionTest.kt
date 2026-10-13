@@ -568,7 +568,7 @@ class AuthSessionTest {
     }
 
     @Test
-    fun `a password change mints from the refresh, keeps the rotated refresh token, and posts current and new`() = runTest {
+    fun `a password change mints from the refresh, keeps the rotated refresh token, and posts current and new auth#30`() = runTest {
         tokenStore.save(AuthTokens("lawris-jwt", "vf-refresh"))
         signedIn()
         vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody(access = "vf-access-r", refresh = "vf-refresh-r")))
@@ -629,7 +629,7 @@ class AuthSessionTest {
     // ── the Lawris-host leftovers ────────────────────────────────────────────
 
     @Test
-    fun `distress help posts the android context and accepts the 202`() = runTest {
+    fun `distress help posts the android context and accepts the 202 auth#19`() = runTest {
         lawrisServer.enqueue(MockResponse(code = 202, body = Fixtures.body("auth.distress-help.accepted")))
 
         val result = repository().requestDistressHelp("a@b.co.ke", "Locked out after web change", "InvalidCredentials")
@@ -644,7 +644,7 @@ class AuthSessionTest {
     }
 
     @Test
-    fun `verify-token accepts a live token and maps a dead one to ResetLinkInvalid`() = runTest {
+    fun `verify-token accepts a live token and maps a dead one to ResetLinkInvalid auth#28`() = runTest {
         lawrisServer.enqueue(MockResponse(code = 200, body = Fixtures.body("auth.password-reset.verify-token.valid")))
         assertThat(repository().verifyResetToken("k7hJ2mZq8LxWv3RtNpYd4Ff").isSuccess).isEqualTo(true)
         assertThat(lawrisServer.takeRequest().body!!.utf8()).isEqualTo("""{"token":"k7hJ2mZq8LxWv3RtNpYd4Ff"}""")
@@ -654,7 +654,7 @@ class AuthSessionTest {
     }
 
     @Test
-    fun `confirm posts the token pair and maps token and password rejections apart`() = runTest {
+    fun `confirm posts the token pair and maps token and password rejections apart auth#29`() = runTest {
         lawrisServer.enqueue(MockResponse(code = 200, body = Fixtures.body("auth.password-reset.confirm.success")))
         assertThat(repository().confirmResetWithToken("k7hJ2mZq8LxWv3RtNpYd4Ff", "NewPass1!").isSuccess)
             .isEqualTo(true)

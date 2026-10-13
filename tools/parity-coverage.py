@@ -11,8 +11,8 @@ Row ids
         contracts → contracts            dms → dms             legal-db-knowledge → research
         files-crypt-sharing-admin → files pms → pms
 Tags
-    A test carries `[<area>#<id>]` anywhere in its name, e.g.
-        fun `nav-info answers the role and the firm [auth#30]`()
+    A test carries `<area>#<id>` anywhere in its name (no brackets: the JVM forbids them in method names), e.g.
+        fun `nav-info answers the role and the firm auth#30`()
     One test may carry several tags; a parked row is listed in <parity dir>/parked.txt as `auth#4`.
 Exit status
     1 when an area listed in <parity dir>/in-scope.txt has a row with neither a tag nor a parked
@@ -33,7 +33,7 @@ AREA_KEYS = {
     "pms": "pms",
 }
 
-TAG = re.compile(r"\[([a-z]+)#([A-Za-z0-9._-]+)]")
+TAG = re.compile(r"\b(auth|chat|tools|contracts|dms|research|files|pms)#([A-Za-z0-9._-]+)\b")
 
 
 def cells(line: str) -> list[str]:

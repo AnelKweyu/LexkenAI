@@ -18,3 +18,48 @@ files#r55
 files#r56
 files#r57
 files#r58
+
+# Auth area (P1, 2026-10-13). The web's sign-in rails are replaced by the EMS identity bridge
+# (parity plan §0.2): router, practitioner/employee/client guards and logins, workspace and
+# public signup, OTP verify/resend, Lawris login and token refresh, Google, Lawris password-reset
+# request, client forced change. Covered on the identity host by core/auth (AuthSessionTest).
+auth#1
+auth#2
+auth#3
+auth#4
+auth#5
+auth#6
+auth#7
+auth#8
+auth#9
+auth#10
+auth#11
+auth#12
+auth#13
+auth#14
+auth#15
+auth#16
+auth#17
+auth#18
+auth#20
+auth#21
+auth#22
+auth#23
+auth#24
+auth#27
+auth#31
+# Lawris logout: the JWT is stateless; mobile revokes on the identity host (AuthSessionRevoker).
+auth#26
+# Token pricing: exported but no caller on the web (§0.7).
+auth#55
+# LSK elevation over /ws/verification/: web-only rail (F2, auth #58).
+auth#58
+# Business tenders: F12, built in P7.
+auth#61
+# Startup reconciliation of generation runs: F11, built in P5.
+auth#62
+# Dead on the web (§0.7): legacy payment modal, OAuth logout, Accounting page, old LSK InputGroup.
+auth#D1
+auth#D2
+auth#D3
+auth#D4

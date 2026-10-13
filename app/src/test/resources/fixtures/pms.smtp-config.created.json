@@ -1,0 +1,22 @@
+{
+  "method": "POST",
+  "path": "/pms/smtp-config/",
+  "status": 201,
+  "body": {
+    "id": "6a5b4c3d-2e1f-4a0b-9c8d-7e6f5a4b3c2d",
+    "email_host": "smtp.mwangiotieno.co.ke",
+    "email_port": 587,
+    "email_use_tls": true,
+    "email_use_ssl": false,
+    "email_host_user": "notices@mwangiotieno.co.ke",
+    "default_from_email": "notices@mwangiotieno.co.ke",
+    "is_active": true,
+    "cc_emails": ["records@mwangiotieno.co.ke"],
+    "bcc_emails": [],
+    "lawfirm": "9b1c2d3e-4f5a-4b6c-8d7e-0f1a2b3c4d5e",
+    "lawyer": null,
+    "created_at": "2026-10-13T06:13:05Z",
+    "updated_at": "2026-10-13T06:13:05Z"
+  },
+  "note": "documented from source, not recorded: pms/serializers.py SmtpConfigurationSerializer (prod_staging f33be2a); the password is write-only and never echoed; needs an active subscription (403 otherwise)."
+}

@@ -1,0 +1,15 @@
+{
+  "method": "GET",
+  "path": "/sub/ai-credits-balance/",
+  "status": 200,
+  "body": {
+    "personal_ai_credits_balance": 0,
+    "ai_credits_reset_date": "2026-10-20",
+    "subscription_ai_credits_balance": null,
+    "subscription_plan": null,
+    "shared_credit_monthly_usage_limit": 200,
+    "current_month_shared_credits_used": 45,
+    "shared_credits_limit_reset_date": "2026-11-01"
+  },
+  "note": "documented from source, not recorded: subscription/views.py UserAICreditsBalanceView (prod_staging f33be2a) for an employee under a firm's shared limit — the web's `||` chain lands on shared_credit_monthly_usage_limit."
+}

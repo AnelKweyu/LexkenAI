@@ -1,0 +1,10 @@
+{
+  "method": "GET",
+  "path": "/sub/payments/status/0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e/",
+  "template": "/sub/payments/status/{payment_id}/",
+  "status": 404,
+  "body": {
+    "error": "Payment not found."
+  },
+  "note": "documented from source, not recorded: subscription/views.py PaymentStatusView (prod_staging f33be2a) for a payment id that is not the caller's — the web's /pay ends a Daraja poll as failed on it."
+}

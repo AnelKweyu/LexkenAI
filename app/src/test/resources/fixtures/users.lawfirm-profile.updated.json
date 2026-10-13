@@ -1,0 +1,21 @@
+{
+  "method": "PATCH",
+  "path": "/users/lawfirm-profile/",
+  "status": 200,
+  "body": {
+    "lawfirm_id": "9b1c2d3e-4f5a-4b6c-8d7e-0f1a2b3c4d5e",
+    "lawfirm_name": "Mwangi & Otieno Advocates",
+    "admin_name": "Wanjiru Mwangi",
+    "admin_email": "wanjiru@mwangiotieno.co.ke",
+    "admin_tel": "+254722334455",
+    "employee_count": 4,
+    "technical_details": {},
+    "address": "Kenyatta Avenue, Nakuru",
+    "bank_details": null,
+    "logo_url": "https://stage.lexken.ai/media/lawfirm_logos/mwangi-otieno.png",
+    "documents_logo_url": "https://stage.lexken.ai/media/lawfirm_logos/mwangi-otieno-letterhead.png",
+    "created_at": "2026-10-13T06:10:00Z",
+    "updated_at": "2026-10-13T06:12:40Z"
+  },
+  "note": "documented from source, not recorded: users/views.py LawFirmProfileView._serialize (prod_staging f33be2a) after a PATCH; the only multipart file fields the view reads are `logo` and `documents_logo`."
+}

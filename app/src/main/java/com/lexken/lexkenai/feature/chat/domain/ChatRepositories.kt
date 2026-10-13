@@ -466,6 +466,8 @@ class ExportAnswerToWordUseCase(
     private val repository: ExportRepository,
     private val polling: PollingEngine,
     private val brand: String,
+    /** `API_BASE_URL_DOWNLOAD`: `result.file_url` is a host-root `/media/…` path, fetched with no bearer. */
+    private val mediaBaseUrl: String,
     private val pollMillis: Long = ChatTimers.EXPORT_POLL_MILLIS,
     private val maxAttempts: Int = ChatTimers.EXPORT_MAX_ATTEMPTS,
 ) {
@@ -480,7 +482,10 @@ class ExportAnswerToWordUseCase(
         polling.poll(schedule, isTerminal = { it !is ExportStatus.Pending }) { repository.status(taskId) }.collect { event ->
             when (event) {
                 is PollEvent.Terminal -> outcome = when (val status = event.data) {
-                    is ExportStatus.Success -> repository.download(status.fileUrl, ExportNamingRules.fileName(brand, isoDate)).let { d ->
+                    is ExportStatus.Success -> repository.download(
+                        DraftDocumentRules.absoluteMediaUrl(mediaBaseUrl, status.fileUrl) ?: status.fileUrl,
+                        ExportNamingRules.fileName(brand, isoDate),
+                    ).let { d ->
                         when (d) {
                             is Result.Success -> d
                             is Result.Failure -> Result.Failure(ExportError.Transport(d.error))

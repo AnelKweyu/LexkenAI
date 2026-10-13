@@ -100,7 +100,9 @@ val chatModule = module {
     factory { GenerateBriefFileUseCase(repository = get(), polling = get()) }
     factoryOf(::ExplainStatuteUseCase)
     factoryOf(::SendAnswerFeedbackUseCase)
-    factory { ExportAnswerToWordUseCase(repository = get(), polling = get(), brand = get(ChatQualifiers.BRAND)) }
+    factory {
+        ExportAnswerToWordUseCase(repository = get(), polling = get(), brand = get(ChatQualifiers.BRAND), mediaBaseUrl = get(ChatQualifiers.MEDIA_BASE_URL))
+    }
     factory { OpenDraftDocumentUseCase(repository = get(), mediaBaseUrl = get(ChatQualifiers.MEDIA_BASE_URL)) }
     factoryOf(::LoadDraftingRegistryUseCase)
     factoryOf(::LoadPlaybookUseCase)

@@ -53,7 +53,9 @@ interface VfOAuthApi {
  */
 interface ExchangeApi {
     @POST("auth/proxy-exchange-token/")
-    suspend fun exchange(@Header("Authorization") vfBearer: String): ExchangeResponse
+    suspend fun exchange(
+        @Header("Authorization") vfBearer: String,
+    ): ExchangeResponse
 }
 
 @Serializable
@@ -178,7 +180,9 @@ interface VfAccountApi {
      * for an unverified 2FA session, and the Lawris exchange flattens that to a 401.
      */
     @GET("authentication/users/me/")
-    suspend fun me(@Header("Authorization") vfBearer: String): VfMeResponse
+    suspend fun me(
+        @Header("Authorization") vfBearer: String,
+    ): VfMeResponse
 
     /** Revokes the bearer's session on the identity host. A GET, as the Virtual Firm app calls it. */
     @GET("authentication/logout/")
@@ -296,15 +300,21 @@ data class OtpVerifyResponse(
 interface LawrisAuthApi {
     @Headers("${AuthInterceptor.NO_AUTH_HEADER}: 1")
     @POST("auth/distress-help/")
-    suspend fun distressHelp(@Body body: DistressHelpRequest): MessageResponse
+    suspend fun distressHelp(
+        @Body body: DistressHelpRequest,
+    ): MessageResponse
 
     @Headers("${AuthInterceptor.NO_AUTH_HEADER}: 1")
     @POST("auth/password-reset/verify-token/")
-    suspend fun verifyResetToken(@Body body: ResetTokenRequest): SuccessResponse
+    suspend fun verifyResetToken(
+        @Body body: ResetTokenRequest,
+    ): SuccessResponse
 
     @Headers("${AuthInterceptor.NO_AUTH_HEADER}: 1")
     @POST("auth/password-reset/confirm/")
-    suspend fun confirmPasswordReset(@Body body: ResetConfirmRequest): SuccessResponse
+    suspend fun confirmPasswordReset(
+        @Body body: ResetConfirmRequest,
+    ): SuccessResponse
 }
 
 @Serializable

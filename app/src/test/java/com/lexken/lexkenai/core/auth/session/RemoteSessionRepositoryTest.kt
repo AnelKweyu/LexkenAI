@@ -38,7 +38,6 @@ import retrofit2.create
  * responses are routed by path rather than enqueued in order.
  */
 class RemoteSessionRepositoryTest {
-
     private val server = MockWebServer()
     private val tokenStore = InMemoryTokenStore(AuthTokens("lawris-jwt", "vf-refresh"))
     private lateinit var repository: RemoteSessionRepository
@@ -46,7 +45,10 @@ class RemoteSessionRepositoryTest {
     private val responses = mutableMapOf<String, MockResponse>()
 
     private fun api(): SessionApi {
-        val json = Json { ignoreUnknownKeys = true; explicitNulls = false }
+        val json = Json {
+            ignoreUnknownKeys = true
+            explicitNulls = false
+        }
         return Retrofit.Builder()
             .baseUrl(server.url("/api/"))
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))

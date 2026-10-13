@@ -40,10 +40,15 @@ object Fixtures {
     /** The response body only — the common case. */
     fun body(name: String): String = load(name).body
 
-    private fun read(name: String): String {
-        val stream = Fixtures::class.java.classLoader?.getResourceAsStream("fixtures/$name.json")
-            ?: Fixtures::class.java.getResourceAsStream("/fixtures/$name.json")
-            ?: throw IllegalArgumentException("No fixture named '$name' (expected fixtures/$name.json on the classpath)")
+    /** Load `fixtures/sockets/<name>.jsonl` — a recorded WebSocket conversation (see [SocketScript]). */
+    fun socket(name: String): SocketScript = SocketScript.parse(name, readResource("sockets/$name.jsonl"))
+
+    private fun read(name: String): String = readResource("$name.json")
+
+    private fun readResource(relative: String): String {
+        val stream = Fixtures::class.java.classLoader?.getResourceAsStream("fixtures/$relative")
+            ?: Fixtures::class.java.getResourceAsStream("/fixtures/$relative")
+            ?: throw IllegalArgumentException("No fixture at fixtures/$relative on the classpath")
         return stream.bufferedReader().use { it.readText() }
     }
 

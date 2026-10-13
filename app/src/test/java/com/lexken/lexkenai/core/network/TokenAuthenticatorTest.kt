@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test
 
 /** The single-refresh contract: one renewal per 401, one replay, never a loop. */
 class TokenAuthenticatorTest {
-
     private val server = MockWebServer()
 
     @BeforeEach

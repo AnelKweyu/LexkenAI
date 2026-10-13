@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "path": "/ai/lawris-ai/",
+  "status": 403,
+  "body": {
+    "code": "ai_session_required",
+    "message": "Authentication failed."
+  },
+  "note": "probed live on stage.lexken.ai with a mobile principal (2026-10-12) and confirmed against security/permissions.py AISessionRequired: the chat route without X-AI-Session. The same body guards ai/generate-documents/, ai/submission-analyzer/ and ai/contractual-analysis/."
+}

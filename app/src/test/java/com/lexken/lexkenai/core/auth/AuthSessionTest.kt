@@ -36,7 +36,6 @@ import retrofit2.create
  * Lawris JWT.
  */
 class AuthSessionTest {
-
     private val vfServer = MockWebServer()
     private val lawrisServer = MockWebServer()
     private val tokenStore = InMemoryTokenStore()
@@ -59,7 +58,10 @@ class AuthSessionTest {
     fun setUp() {
         vfServer.start()
         lawrisServer.start()
-        val json = Json { ignoreUnknownKeys = true; explicitNulls = false }
+        val json = Json {
+            ignoreUnknownKeys = true
+            explicitNulls = false
+        }
         val factory = json.asConverterFactory("application/json".toMediaType())
         val vf = Retrofit.Builder().baseUrl(vfServer.url("/")).addConverterFactory(factory).build()
         vfApi = vf.create()

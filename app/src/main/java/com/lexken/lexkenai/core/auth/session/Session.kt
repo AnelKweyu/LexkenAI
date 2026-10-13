@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 sealed interface SessionState {
     data object Unknown : SessionState
     data object SignedOut : SessionState
+
     /** [subscriptionExpired] mirrors `sub/current/` `is_expired` — the web shows its expired-subscription modal on it. */
     data class SignedIn(val user: User, val credits: Credits, val subscriptionExpired: Boolean = false) : SessionState
 }
@@ -34,7 +35,9 @@ interface SessionRepository {
 object SessionExpiryNotice {
     @Volatile private var armed = false
 
-    fun arm() { armed = true }
+    fun arm() {
+        armed = true
+    }
 
     /** True once after [arm]; false thereafter. */
     fun consume(): Boolean {
@@ -43,7 +46,9 @@ object SessionExpiryNotice {
         return was
     }
 
-    fun reset() { armed = false }
+    fun reset() {
+        armed = false
+    }
 }
 
 /**
@@ -59,6 +64,7 @@ fun interface PasswordChanger {
 sealed interface PasswordChangeFailure : Error {
     /** The identity host rejected the current password. */
     data object WrongCurrent : PasswordChangeFailure
+
     /** The identity host rejected the new password; [message] is its own sentence. */
     data class Rejected(val message: String) : PasswordChangeFailure
     data class Transport(val error: DataError) : PasswordChangeFailure

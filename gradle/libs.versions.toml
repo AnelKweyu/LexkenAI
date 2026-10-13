@@ -20,6 +20,9 @@ junit5 = "5.13.4"
 junitPlatform = "1.13.4"
 turbine = "1.2.1"
 assertk = "0.28.1"
+kover = "0.9.11"
+ktlintCli = "1.8.0"
+detektCli = "1.23.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -65,6 +68,10 @@ junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
 
+# Code quality (run as plain JavaExec tasks from the root build script, no Gradle plugins needed)
+ktlint-cli = { group = "com.pinterest.ktlint", name = "ktlint-cli", version.ref = "ktlintCli" }
+detekt-cli = { group = "io.gitlab.arturbosch.detekt", name = "detekt-cli", version.ref = "detektCli" }
+
 [bundles]
 unit-test = [
     "junit-jupiter-api",
@@ -81,3 +88,4 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 firebase-appdistribution = { id = "com.google.firebase.appdistribution", version.ref = "firebaseAppDistribution" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

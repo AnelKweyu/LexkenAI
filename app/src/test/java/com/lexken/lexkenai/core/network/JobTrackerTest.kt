@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test
  * that closes early, never connects or fails outright leaves the poll untouched.
  */
 class JobTrackerTest {
-
     private data class Status(val value: String)
 
     private val schedule = PollSchedule(initialMillis = 1_000, maxMillis = 1_000, capMillis = 60_000, backoffFactor = 1.0)

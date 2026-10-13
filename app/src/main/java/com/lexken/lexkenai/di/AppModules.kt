@@ -4,7 +4,10 @@ import com.lexken.lexkenai.BuildConfig
 import com.lexken.lexkenai.core.auth.VfConfig
 import com.lexken.lexkenai.core.auth.authModule
 import com.lexken.lexkenai.core.network.NetworkQualifiers
+import com.lexken.lexkenai.core.network.aisession.DataStoreDeviceIdStore
+import com.lexken.lexkenai.core.network.aisession.DeviceIdStore
 import com.lexken.lexkenai.core.network.networkModule
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -23,9 +26,15 @@ private val buildConfigModule = module {
     }
 }
 
-/** Everything Koin starts with. Order: build config → core → features. */
+/** Stores that need the Android context; tests bind their in-memory twins instead. */
+private val platformModule = module {
+    single<DeviceIdStore> { DataStoreDeviceIdStore(androidContext()) }
+}
+
+/** Everything Koin starts with. Order: build config → platform → core → features. */
 val appModules: List<Module> = listOf(
     buildConfigModule,
+    platformModule,
     networkModule,
     authModule,
 )

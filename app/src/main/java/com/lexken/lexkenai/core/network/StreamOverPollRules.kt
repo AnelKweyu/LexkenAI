@@ -7,7 +7,6 @@ package com.lexken.lexkenai.core.network
  * subscription refusal, which is terminal by contract on either rail.
  */
 object StreamOverPollRules {
-
     /** The bar is monotonic on both rails: the larger of what the poll and the frames said. */
     fun percent(current: Int?, incoming: Int?): Int? = when {
         incoming == null -> current

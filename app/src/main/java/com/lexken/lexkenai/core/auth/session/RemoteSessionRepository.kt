@@ -44,7 +44,9 @@ interface SessionApi {
 data class SubscriptionEnvelopeDto(val subscription: SubscriptionFlagsDto? = null)
 
 @Serializable
-data class SubscriptionFlagsDto(@SerialName("is_expired") val isExpired: Boolean? = null)
+data class SubscriptionFlagsDto(
+    @SerialName("is_expired") val isExpired: Boolean? = null,
+)
 
 @Serializable
 data class LawfirmProfileDto(
@@ -82,7 +84,6 @@ class RemoteSessionRepository(
      */
     private val revokeScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
 ) : SessionRepository {
-
     private val _state = MutableStateFlow<SessionState>(SessionState.Unknown)
 
     override val state: Flow<SessionState> = _state.onStart {
@@ -121,13 +122,19 @@ class RemoteSessionRepository(
                 _state.value = signedIn
                 Result.Success(signedIn)
             }
-            is Result.Failure -> when (fetched.error) {
-                DataError.Network.UNAUTHORIZED -> {
-                    tokenStore.clear()
-                    SessionExpiryNotice.arm()
-                    Result.Success(SessionState.SignedOut.also { _state.value = it })
+
+            is Result.Failure -> {
+                when (fetched.error) {
+                    DataError.Network.UNAUTHORIZED -> {
+                        tokenStore.clear()
+                        SessionExpiryNotice.arm()
+                        Result.Success(SessionState.SignedOut.also { _state.value = it })
+                    }
+
+                    else -> {
+                        Result.Failure(fetched.error)
+                    }
                 }
-                else -> Result.Failure(fetched.error)
             }
         }
     }

@@ -1,0 +1,65 @@
+# Applied on top of detekt's defaults (--build-upon-default-config). Only the deltas live here.
+build:
+  maxIssues: 0
+
+style:
+  MaxLineLength:
+    maxLineLength: 160
+    excludeCommentStatements: true
+  MagicNumber:
+    active: false            # timeouts, HTTP codes and poll cadences are documented inline
+  ReturnCount:
+    active: false            # early returns read better than nested branches in the result mappers
+  UnusedPrivateMember:
+    active: true
+  WildcardImport:
+    active: true
+  ForbiddenComment:
+    active: false
+  UnnecessaryAbstractClass:
+    active: false
+  LoopWithTooManyJumpStatements:
+    active: false
+  DestructuringDeclarationWithTooManyEntries:
+    maxDestructuringEntries: 4
+
+complexity:
+  LongMethod:
+    threshold: 80
+  LongParameterList:
+    functionThreshold: 8
+    constructorThreshold: 10
+    ignoreDefaultParameters: true
+  TooManyFunctions:
+    thresholdInFiles: 25
+    thresholdInClasses: 25
+    thresholdInInterfaces: 25
+    thresholdInObjects: 25
+    ignoreDeprecated: true
+    ignorePrivate: true
+  CyclomaticComplexMethod:
+    threshold: 20
+  NestedBlockDepth:
+    threshold: 5
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: false            # safeCall/safeApiCall catch Throwable by design and rethrow CancellationException
+  SwallowedException:
+    active: false
+  InstanceOfCheckForException:
+    active: false
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated: ['Composable', 'Test', 'ParameterizedTest', 'TestFactory']
+  MatchingDeclarationName:
+    active: false
+
+empty-blocks:
+  EmptyFunctionBlock:
+    ignoreOverridden: true
+
+potential-bugs:
+  UnsafeCallOnNullableType:
+    active: false            # tests assert on nullable fixtures with !! on purpose

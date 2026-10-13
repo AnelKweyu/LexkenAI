@@ -11,7 +11,6 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 class ApiErrorParserTest {
-
     private val json = Json { ignoreUnknownKeys = true }
 
     private fun httpError(code: Int, body: String): HttpException =

@@ -19,7 +19,6 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class SafeCallTest {
-
     @Test
     fun `wraps success`() = runTest {
         assertThat(safeCall { 42 }).isEqualTo(Result.Success(42))

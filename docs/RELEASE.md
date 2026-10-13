@@ -4,7 +4,7 @@ Four workflows under `.github/workflows/`:
 
 | Workflow | Trigger | Produces |
 |---|---|---|
-| `ci.yml` | every PR, every push to `main` | debug + R8 builds, unit tests, lint |
+| `ci.yml` | every PR, every push to `main` | debug + R8 builds, unit tests (both flavours), Kover coverage gate, ktlint + detekt, lint, parity-coverage (skips without the appendix) |
 | `distribute.yml` | push to `main` | R8 **staging** APK → Firebase App Distribution testers |
 | `cd.yml` | tag `v*` or manual run | store-signed **prod** AAB/APK + staging APK → GitHub Release → Play internal |
 | `nightly.yml` | 02:00 EAT daily | instrumented tests on a managed emulator |

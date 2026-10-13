@@ -31,11 +31,26 @@ sealed interface DataError : Error {
         INSUFFICIENT_CREDITS,
         NO_SUBSCRIPTION,
         PLAN_RESTRICTED,
+
         /**
          * `ai_session_required` / `turnstile_required`: the route wants an `X-AI-Session` minted
          * behind a browser-only Cloudflare challenge (`security/permissions.py`). A native mint for
          * mobile principals is the open backend ask; until it lands this is terminal.
          */
         SESSION_CHALLENGE,
+    }
+
+    /**
+     * A 400 whose body is `{"error": "Validation Error", "details": {field: [messages]}}` — the one
+     * 4xx the web lists field by field instead of rejecting silently. [fields] keeps the server's
+     * field names; a `details` that is a plain string lands under [NON_FIELD].
+     */
+    data class Validation(val fields: Map<String, List<String>>, val message: String? = null) : DataError {
+        /** Every message, in field order — what a form shows when it has no slot for the field. */
+        val messages: List<String> get() = fields.values.flatten()
+
+        companion object {
+            const val NON_FIELD = "non_field_errors"
+        }
     }
 }

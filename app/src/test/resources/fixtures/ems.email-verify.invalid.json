@@ -1,0 +1,10 @@
+{
+  "host": "vf",
+  "method": "POST",
+  "path": "/authentication/email/verify/",
+  "status": 400,
+  "body": {
+    "detail": "Invalid verification code."
+  },
+  "note": "documented, not recorded: the identity host's shape per AUTHENTICATION_APIS.md and the Virtual Firm app's AuthApiTest (2026-09-17) — no account may be created on staging, so the 2xx bodies are the documented echoes; the 4xx bodies are the DRF/RFC 6749 shapes probed live"
+}

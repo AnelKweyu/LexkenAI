@@ -1,0 +1,10 @@
+{
+  "method": "GET",
+  "path": "/users/profile/nav-info/",
+  "status": 200,
+  "body": {
+    "full_name": "Tier One",
+    "email": "tier1@lexken.test",
+    "role_name": "advocate"
+  }
+}

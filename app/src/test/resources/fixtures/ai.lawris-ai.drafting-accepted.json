@@ -6,9 +6,8 @@
     "thread_id": "a3f1c9e2-7b44-4d6e-9f1a-2c8e5b7d3a10",
     "task_id": "celery-9c1d",
     "run_id": "run-4c1d2e3f",
-    "mode": "claude_drafting",
     "status": "queued",
     "duplicate": false
   },
-  "note": "documented from source, not recorded: ai/views.py LegalAssistantView.post, drafting_effort=very_high branch (prod_staging f33be2a)."
+  "note": "documented from source, not recorded: ai/views.py LegalAssistantView.post, drafting_effort=very_high branch (prod_staging f33be2a). The server's `mode` key is omitted here; the app does not read it."
 }

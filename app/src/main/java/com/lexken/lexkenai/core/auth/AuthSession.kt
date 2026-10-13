@@ -3,15 +3,14 @@ package com.lexken.lexkenai.core.auth
 import com.lexken.lexkenai.core.auth.session.PasswordChangeFailure
 import com.lexken.lexkenai.core.auth.session.PasswordChanger
 import com.lexken.lexkenai.core.auth.session.SessionRepository
-import com.lexken.lexkenai.core.auth.session.SessionState
 import com.lexken.lexkenai.core.network.safeCall
 import com.lexken.lexkenai.core.result.DataError
 import com.lexken.lexkenai.core.result.EmptyResult
 import com.lexken.lexkenai.core.result.Result
+import com.lexken.lexkenai.core.result.getOrNull
 import com.lexken.lexkenai.core.result.map
 import com.lexken.lexkenai.core.result.mapError
 import com.lexken.lexkenai.core.result.onSuccess
-import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 
 internal fun String?.toOtpDelivery(): OtpDelivery = when (this?.lowercase()) {
@@ -68,7 +67,7 @@ class AuthSession(
     override suspend fun signIn(email: String, password: String): Result<SignInOutcome, AuthError> {
         pendingMfa = null
         val vfTokens = when (val minted = mint(email, password)) {
-            is Result.Failure -> return Result.Failure(minted.error.network.toSignInError())
+            is Result.Failure -> return Result.Failure(minted.error.toSignInError(email, password))
             is Result.Success -> minted.data
         }
         if (vfTokens.twoFactorEnabled == true) {
@@ -91,8 +90,16 @@ class AuthSession(
         val verified = safeCall {
             accountApi.verifyLoginOtp("Bearer ${pending.accessToken}", OtpVerifyRequest(code))
         }
-        if (verified is Result.Failure) return Result.Failure(verified.error.toOtpError())
-        return exchangeAndComplete(pending).onSuccess { pendingMfa = null }
+        val rotated = when (verified) {
+            is Result.Failure -> return Result.Failure(verified.error.toOtpError())
+            is Result.Success -> verified.data
+        }
+        // `LoginVerify` deletes the interim pair and answers with the verified one, so that is
+        // what gets exchanged; a host that only acknowledges leaves the interim pair in place.
+        val session = rotated.accessToken?.let { access ->
+            pending.copy(accessToken = access, refreshToken = rotated.refreshToken ?: pending.refreshToken, twoFactorEnabled = false)
+        } ?: pending
+        return exchangeAndComplete(session).onSuccess { pendingMfa = null }
     }
 
     override suspend fun requestPasswordReset(email: String): EmptyResult<AuthError> =
@@ -265,18 +272,31 @@ class AuthSession(
 
     private suspend fun exchangeAndComplete(vfTokens: VfTokenResponse): EmptyResult<AuthError> =
         when (val exchanged = httpCall(json) { exchangeApi.exchange("Bearer ${vfTokens.accessToken}") }) {
-            is Result.Failure -> Result.Failure(
-                // `lexken_auth/services.py`: 403 "The Virtual Law Firm email is not verified."
-                if (exchanged.error.network == DataError.Network.FORBIDDEN && exchanged.error.mentions("not verified")) {
-                    AuthError.EmailUnverified
-                } else {
-                    AuthError.Data(exchanged.error.network)
-                },
-            )
+            is Result.Failure -> Result.Failure(exchanged.error.toExchangeError(vfTokens.accessToken))
             is Result.Success -> complete(
                 AuthTokens(accessToken = exchanged.data.aiServiceToken, refreshToken = vfTokens.refreshToken),
             )
         }
+
+    /**
+     * `lexken_auth/services.py`: 403 "The Virtual Law Firm email is not verified." is its own
+     * refusal; every 401 and 403 the identity host answered is flattened to one 401 "Invalid or
+     * expired Virtual Law Firm token." — so a 401 right after a successful mint asks the host
+     * itself whether the token is gated behind two-factor.
+     */
+    private suspend fun HttpFailure.toExchangeError(vfAccess: String): AuthError = when {
+        network == DataError.Network.FORBIDDEN && mentions("not verified") -> AuthError.EmailUnverified
+        network == DataError.Network.UNAUTHORIZED && twoFactorGated(vfAccess) -> AuthError.TwoFactorBlocked
+        else -> AuthError.Data(network)
+    }
+
+    /** `drf_authentication.py`: 403 "Two Factor Authentication not verified" for an unverified 2FA session. */
+    private suspend fun twoFactorGated(vfAccess: String): Boolean {
+        val probe = httpCall(json) { accountApi.me("Bearer $vfAccess") }
+        return probe is Result.Failure &&
+            probe.error.network == DataError.Network.FORBIDDEN &&
+            probe.error.mentions("two factor")
+    }
 
     /** The OTP endpoint answers a wrong code with 400; an expired interim token with 401. */
     private fun DataError.Network.toOtpError(): AuthError = when (this) {
@@ -334,6 +354,9 @@ class AuthSession(
         const val DISTRESS_CONTEXT = "android_sign_in"
         /** Consumer sign-ups are individual clients on the identity host, as the Virtual Firm app registers them. */
         const val INDIVIDUAL_ACCOUNT = "individual"
+        /** Set beside `detail` by the 2FA middleware when the email channel's address is unverified. */
+        const val EMAIL_VERIFICATION_REQUIRED = "email_verification_required"
+        const val INVALID_GRANT = "invalid_grant"
     }
 
     /** Persist tokens, then load the user; if that fails roll the tokens back so we never half-sign-in. */
@@ -348,19 +371,41 @@ class AuthSession(
         }
     }
 
-    /** The OAuth server answers a wrong password with 400/401 — both mean the credentials. */
-    private fun DataError.Network.toSignInError(): AuthError = when (this) {
-        DataError.Network.UNAUTHORIZED -> AuthError.InvalidCredentials
-        DataError.Network.UNKNOWN -> AuthError.InvalidCredentials
-        else -> AuthError.Data(this)
+    /**
+     * The mobile grant's refusals. RFC 6749 answers a wrong password with 400/401
+     * `{"error":"invalid_grant"}`; any other OAuth code (`invalid_client`, `unsupported_grant_type`)
+     * is a misconfigured build and its description is shown. The 2FA middleware answers 400
+     * `{"detail": …}` when it cannot send the code (an SMS channel with no phone on the account),
+     * or `{"detail": …, "email_verification_required": true}` for an email channel whose address is
+     * unverified — that code is already on its way, so the credentials are remembered for the
+     * email-code screen exactly as an unverified exchange does. A masked 404 (wrong bypass key,
+     * replayed nonce) and the 5-per-minute throttle stay data errors.
+     */
+    private fun HttpFailure.toSignInError(email: String, password: String): AuthError {
+        val body = body
+        return when {
+            body?.flag(EMAIL_VERIFICATION_REQUIRED) == true -> {
+                pendingCredentials = PendingCredentials(email, password)
+                AuthError.EmailUnverified
+            }
+            body?.error == INVALID_GRANT -> AuthError.InvalidCredentials
+            body?.error != null -> AuthError.SignInBlocked(body.firstSentence ?: body.error)
+            network == DataError.Network.UNAUTHORIZED -> AuthError.InvalidCredentials
+            network == DataError.Network.UNKNOWN && body?.detail != null -> AuthError.SignInBlocked(body.detail)
+            network == DataError.Network.UNKNOWN -> AuthError.InvalidCredentials
+            else -> AuthError.Data(network)
+        }
     }
 }
 
 /**
  * A fresh VF access token from the stored refresh grant. The stored access token is the Lawris
  * JWT, so every identity-host call that needs a bearer starts here (best-effort: null on refusal).
+ * The grant **rotates** the refresh token: a caller that keeps the session must persist
+ * `refreshToken` from the answer before its next call, or the old one will be replayed later and
+ * the host's reuse protection will revoke the whole family.
  */
-internal suspend fun VfOAuthApi.accessFromRefresh(config: VfConfig, refreshToken: String): VfTokenResponse? = runCatching {
+internal suspend fun VfOAuthApi.accessFromRefresh(config: VfConfig, refreshToken: String): VfTokenResponse? = safeCall {
     token(
         bypassKey = config.bypassKey,
         nonce = nonce(),
@@ -387,15 +432,16 @@ class AuthSessionRenewer(
     override suspend fun renew(current: AuthTokens): AuthTokens? {
         val refreshToken = current.refreshToken ?: return null
         val minted = vfApi.accessFromRefresh(config, refreshToken) ?: return null
-        val exchanged = runCatching { exchangeApi.exchange("Bearer ${minted.accessToken}") }.getOrNull() ?: return null
+        val exchanged = safeCall { exchangeApi.exchange("Bearer ${minted.accessToken}") }.getOrNull() ?: return null
         return AuthTokens(accessToken = exchanged.aiServiceToken, refreshToken = minted.refreshToken ?: refreshToken)
     }
 }
 
 /**
  * Server-side sign-out, after the local wipe: the stored VF refresh token is turned into a fresh
- * VF access and that session is revoked at `authentication/logout/`. Every failure is swallowed —
- * the user is already signed out.
+ * VF access and that session is revoked at `authentication/logout/`, which deletes the pair and
+ * the refresh token it was rotated from (`revoke_current_oauth_token`). Every failure is
+ * swallowed — the user is already signed out.
  */
 class AuthSessionRevoker(
     private val vfApi: VfOAuthApi,
@@ -406,25 +452,25 @@ class AuthSessionRevoker(
     override suspend fun revoke(tokens: AuthTokens) {
         val refresh = tokens.refreshToken ?: return
         val minted = vfApi.accessFromRefresh(config, refresh) ?: return
-        runCatching { accountApi.logout(config.bypassKey, nonce(), config.bundleId, "Bearer ${minted.accessToken}") }
+        safeCall { accountApi.logout(config.bypassKey, nonce(), config.bundleId, "Bearer ${minted.accessToken}") }
     }
 }
 
 /**
  * Change the signed-in user's password on the identity host: the account the exchange created
  * on Lawris carries an unusable password, so Lawris `auth/password/change/` would change a
- * credential the app never signs in with. The host invalidates every token afterwards, so a
- * success re-mints with the new password and re-exchanges to keep the session alive; when that
- * re-mint fails the Lawris JWT still carries the session and the next renewal ends it with the
- * usual notice.
+ * credential the app never signs in with. `PasswordChange` (`authentication/views.py`) keeps the
+ * session that made the call and revokes every other one, so the VF pair minted here survives
+ * and nothing is re-minted. The stored access token is the Lawris JWT, so the call starts with a
+ * refresh grant — which rotates the refresh token, and the rotated token is persisted before
+ * anything else happens: replaying the consumed one at the next renewal would trip the host's
+ * reuse protection and sign the user out over a merely wrong current password.
  */
 class IdentityPasswordChanger(
     private val vfApi: VfOAuthApi,
     private val accountApi: VfAccountApi,
-    private val exchangeApi: ExchangeApi,
     private val config: VfConfig,
     private val tokenStore: TokenStore,
-    private val sessionRepository: SessionRepository,
     private val json: Json = Json { ignoreUnknownKeys = true },
 ) : PasswordChanger {
 
@@ -434,10 +480,9 @@ class IdentityPasswordChanger(
         if (stored == null || refresh == null) {
             return Result.Failure(PasswordChangeFailure.Transport(DataError.Network.UNAUTHORIZED))
         }
-        val email = (sessionRepository.state.first() as? SessionState.SignedIn)?.user?.email
-            ?: return Result.Failure(PasswordChangeFailure.Transport(DataError.Network.UNAUTHORIZED))
         val minted = vfApi.accessFromRefresh(config, refresh)
             ?: return Result.Failure(PasswordChangeFailure.Transport(DataError.Network.UNAUTHORIZED))
+        minted.refreshToken?.let { tokenStore.save(stored.copy(refreshToken = it)) }
 
         val changed = httpCall(json) {
             accountApi.changePassword(
@@ -457,23 +502,6 @@ class IdentityPasswordChanger(
             )
         }
 
-        // Keep the session: the old refresh token is dead now.
-        runCatching {
-            val reminted = vfApi.token(
-                bypassKey = config.bypassKey,
-                nonce = nonce(),
-                bundleId = config.bundleId,
-                body = VfTokenRequest(
-                    grantType = "password",
-                    username = email,
-                    password = new,
-                    clientId = config.clientId,
-                    clientSecret = config.clientSecret,
-                ),
-            )
-            val exchanged = exchangeApi.exchange("Bearer ${reminted.accessToken}")
-            tokenStore.save(AuthTokens(accessToken = exchanged.aiServiceToken, refreshToken = reminted.refreshToken))
-        }
         return Result.Success(Unit)
     }
 }

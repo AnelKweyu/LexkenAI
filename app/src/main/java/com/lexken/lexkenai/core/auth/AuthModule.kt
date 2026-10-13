@@ -58,15 +58,7 @@ val authModule = module {
     single { AuthSessionRevoker(get(), get(), get()) } bind SessionRevoker::class
     single { RemoteSessionRepository(api = get(), tokenStore = get(), revoker = get()) } bind SessionRepository::class
     single {
-        IdentityPasswordChanger(
-            vfApi = get(),
-            accountApi = get(),
-            exchangeApi = get(),
-            config = get(),
-            tokenStore = get(),
-            sessionRepository = get(),
-            json = get(),
-        )
+        IdentityPasswordChanger(vfApi = get(), accountApi = get(), config = get(), tokenStore = get(), json = get())
     } bind PasswordChanger::class
     single {
         AuthSession(

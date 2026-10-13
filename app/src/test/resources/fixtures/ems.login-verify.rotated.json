@@ -1,0 +1,14 @@
+{
+  "host": "vf",
+  "method": "POST",
+  "path": "/authentication/login/verify/",
+  "status": 200,
+  "body": {
+    "detail": "Two factor authentication verified.",
+    "access_token": "vf-access-verified",
+    "refresh_token": "vf-refresh-verified",
+    "expires_in": 900,
+    "token_type": "Bearer"
+  },
+  "note": "documented, not recorded: the identity host's shape from its source (lexken-vf_sandychix prod_staging @ 37db423e, 2026-10-13) \u2014 no account may be created on staging"
+}

@@ -27,6 +27,14 @@ data class VfConfig(
  * The sign-in rail: mint a Virtual-Lawfirm OAuth token (mobile grant), then exchange it for a
  * long-lived Lawris JWT. Both APIs run on a plain client — no stored bearer, no authenticator —
  * so a renewal can never recurse into itself.
+ *
+ * `oauth2/mobile-token/` (`authentication/oauth2_urls.py` `MobileBypassTokenView`) gates **every**
+ * grant, refresh included, on the three mobile headers: a wrong or missing bypass key and a
+ * replayed nonce both answer a masked 404. Without `X-Mobile-Nonce` the host uses the caller's IP
+ * as the nonce for five minutes, so a second mint from the same network would 404 — always send
+ * one. The route is throttled at 5 requests per minute per caller, so every path here spends
+ * that budget deliberately. No bearer of any kind is read on this route: client auth is the
+ * `client_id` / `client_secret` pair in the body.
  */
 interface VfOAuthApi {
     @POST("oauth2/mobile-token/")
@@ -58,6 +66,12 @@ data class VfTokenRequest(
     @SerialName("client_secret") val clientSecret: String,
 )
 
+/**
+ * `OAUTH2_PROVIDER` on the identity host: access tokens live 900 s, refresh tokens 72 h and
+ * **rotate on every refresh grant** with reuse protection (a consumed refresh token replayed after
+ * the 120 s grace window revokes the whole family). Whoever runs a refresh grant must persist the
+ * returned refresh token before doing anything else.
+ */
 @Serializable
 data class VfTokenResponse(
     @SerialName("access_token") val accessToken: String,
@@ -158,6 +172,14 @@ interface VfAccountApi {
         @Body body: VfPasswordChangeRequest,
     ): EmsAck
 
+    /**
+     * The identity-host account behind a VF bearer. Used only to tell a 2FA gate apart from a
+     * dead token: `drf_authentication.py` answers 403 `"Two Factor Authentication not verified"`
+     * for an unverified 2FA session, and the Lawris exchange flattens that to a 401.
+     */
+    @GET("authentication/users/me/")
+    suspend fun me(@Header("Authorization") vfBearer: String): VfMeResponse
+
     /** Revokes the bearer's session on the identity host. A GET, as the Virtual Firm app calls it. */
     @GET("authentication/logout/")
     suspend fun logout(
@@ -202,6 +224,18 @@ data class EmailResendRequest(val email: String)
 @Serializable
 data class PhoneCodeConfirmRequest(val code: String)
 
+/** `authentication/users/me/` — only the flags the auth rail reads; tolerant of everything else. */
+@Serializable
+data class VfMeResponse(
+    val email: String? = null,
+    @SerialName("email_verified") val emailVerified: Boolean? = null,
+    @SerialName("phone_verified") val phoneVerified: Boolean? = null,
+    @SerialName("two_factor_enabled") val twoFactorEnabled: Boolean? = null,
+    @SerialName("otp_delivery_method") val otpDeliveryMethod: String? = null,
+    /** The host asks for a new password on the next sign-in (temporary credentials). */
+    @SerialName("change_password") val changePassword: Boolean? = null,
+)
+
 /** `{success, channel}` — [channel] is `sms` or `whatsapp`. */
 @Serializable
 data class PhoneCodeSentResponse(val success: String? = null, val channel: String? = null)
@@ -237,9 +271,21 @@ data class PasswordResetConfirmResponse(val success: String? = null)
 @Serializable
 data class OtpVerifyRequest(val code: String)
 
-/** 200 `{"success":"2FA Code Verified."}`; 400 `{"detail":"Unable to verify 2FA Code."}`. */
+/**
+ * `LoginVerify` (`authentication/views.py`): a verified code **rotates the session** — the
+ * interim pair is deleted and a fresh `access_token` / `refresh_token` comes back in the body
+ * (`services/oauth_tokens.py` `rotate_oauth_session_after_login_2fa`). The exchange must use
+ * the new access token; the interim one is dead the moment this answers 200.
+ * 400 `{"detail":"Unable to verify 2FA Code."}`.
+ */
 @Serializable
-data class OtpVerifyResponse(val success: String? = null)
+data class OtpVerifyResponse(
+    val detail: String? = null,
+    val success: String? = null,
+    @SerialName("access_token") val accessToken: String? = null,
+    @SerialName("refresh_token") val refreshToken: String? = null,
+    @SerialName("expires_in") val expiresInSeconds: Long? = null,
+)
 
 /**
  * What is left of the Lawris-host auth surface after the move to the identity rail: the

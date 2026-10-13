@@ -1,0 +1,12 @@
+{
+  "host": "vf",
+  "method": "POST",
+  "path": "/oauth2/mobile-token/",
+  "status": 400,
+  "body": {
+    "detail": "Email verification is required before Email OTP can be used. A verification code has been sent to your email.",
+    "email_verification_required": true,
+    "email": "wanjiru@kamauadvocates.co.ke"
+  },
+  "note": "documented, not recorded: the identity host's shape from its source (lexken-vf_sandychix prod_staging @ 37db423e, 2026-10-13) \u2014 no account may be created on staging"
+}

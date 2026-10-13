@@ -1,0 +1,10 @@
+{
+  "host": "vf",
+  "method": "GET",
+  "path": "/authentication/users/me/",
+  "status": 403,
+  "body": {
+    "detail": "Two Factor Authentication not verified"
+  },
+  "note": "documented, not recorded: the identity host's shape from its source (lexken-vf_sandychix prod_staging @ 37db423e, 2026-10-13) \u2014 no account may be created on staging"
+}

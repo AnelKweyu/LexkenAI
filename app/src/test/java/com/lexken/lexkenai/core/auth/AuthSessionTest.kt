@@ -87,7 +87,7 @@ class AuthSessionTest {
 
     private fun renewer() = AuthSessionRenewer(vfApi, exchangeApi, config)
     private fun revoker() = AuthSessionRevoker(vfApi, accountApi, config)
-    private fun changer() = IdentityPasswordChanger(vfApi, accountApi, exchangeApi, config, tokenStore, session)
+    private fun changer() = IdentityPasswordChanger(vfApi, accountApi, config, tokenStore)
 
     private fun vfTokenBody(access: String = "vf-access", refresh: String = "vf-refresh") =
         """{"access_token":"$access","expires_in":900,"token_type":"Bearer","refresh_token":"$refresh"}"""
@@ -144,6 +144,61 @@ class AuthSessionTest {
 
         assertThat(repository().signIn("user@lexken.ai", "nope").errorOrNull()).isEqualTo(AuthError.InvalidCredentials)
         assertThat(tokenStore.current()).isNull()
+    }
+
+    @Test
+    fun `the mint's own refusals map apart - email code sent, channel unavailable, misconfigured client, throttle, masked 404`() = runTest {
+        // 2FA over email with an unverified address: the host already sent the code, so the
+        // credentials are remembered and the code screen can finish the sign-in.
+        vfServer.enqueue(fixture("oauth2.mobile-token.email-unverified"))
+        val repo = repository()
+        assertThat(repo.signIn("wanjiru@kamauadvocates.co.ke", "correct-horse-battery").errorOrNull()).isEqualTo(AuthError.EmailUnverified)
+        vfServer.takeRequest()
+        vfServer.enqueue(fixture("ems.email-verify.success"))
+        vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody()))
+        assertThat(repo.verifyEmailOtp("wanjiru@kamauadvocates.co.ke", "123456").getOrNull())
+            .isEqualTo(EmailVerificationOutcome.PHONE_VERIFICATION_OFFERED)
+        vfServer.takeRequest()
+        assertThat(vfServer.takeRequest().body!!.utf8().contains("correct-horse-battery")).isEqualTo(true)
+
+        // 2FA over SMS with no phone on the account: the host's sentence, verbatim.
+        vfServer.enqueue(fixture("oauth2.mobile-token.no-phone"))
+        assertThat(repository().signIn("user@lexken.ai", "pw").errorOrNull())
+            .isEqualTo(AuthError.SignInBlocked("Unable to send SMS verification code. Please update your phone number and try again."))
+
+        // An OAuth code other than invalid_grant is a build problem — its description is shown, not "wrong password".
+        vfServer.enqueue(MockResponse(code = 401, body = """{"error":"invalid_client","error_description":"Invalid client_id parameter value."}"""))
+        assertThat(repository().signIn("user@lexken.ai", "pw").errorOrNull())
+            .isEqualTo(AuthError.SignInBlocked("Invalid client_id parameter value."))
+
+        // The 5-per-minute route throttle and the masked 404 (wrong bypass key or replayed nonce) stay data errors.
+        vfServer.enqueue(fixture("oauth2.mobile-token.throttled"))
+        assertThat(repository().signIn("user@lexken.ai", "pw").errorOrNull()).isEqualTo(AuthError.Data(DataError.Network.TOO_MANY_REQUESTS))
+        vfServer.enqueue(MockResponse(code = 404, body = """{"detail":"Not found."}"""))
+        assertThat(repository().signIn("user@lexken.ai", "pw").errorOrNull()).isEqualTo(AuthError.Data(DataError.Network.NOT_FOUND))
+        assertThat(tokenStore.current()).isNull()
+        assertThat(lawrisServer.requestCount).isEqualTo(0)
+    }
+
+    @Test
+    fun `a dead-token exchange asks the identity host whether two-factor is gating it`() = runTest {
+        // The mobile grant never ran the 2FA step, so the token is gated: the exchange's 401 is
+        // really the host's 403 — one probe of users/me tells them apart.
+        vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody()))
+        lawrisServer.enqueue(fixture("auth.proxy-exchange-token.dead-token"))
+        vfServer.enqueue(fixture("ems.two-factor.gated"))
+        assertThat(repository().signIn("user@lexken.ai", "pw").errorOrNull()).isEqualTo(AuthError.TwoFactorBlocked)
+        vfServer.takeRequest()
+        val probe = vfServer.takeRequest()
+        assertThat(probe.url.encodedPath).isEqualTo("/authentication/users/me/")
+        assertThat(probe.headers["Authorization"]).isEqualTo("Bearer vf-access")
+        assertThat(tokenStore.current()).isNull()
+
+        // A probe that answers anything else leaves the 401 a data error.
+        vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody()))
+        lawrisServer.enqueue(fixture("auth.proxy-exchange-token.dead-token"))
+        vfServer.enqueue(MockResponse(code = 401, body = """{"detail":"Authentication credentials were not provided."}"""))
+        assertThat(repository().signIn("user@lexken.ai", "pw").errorOrNull()).isEqualTo(AuthError.Data(DataError.Network.UNAUTHORIZED))
     }
 
     @Test
@@ -235,12 +290,32 @@ class AuthSessionTest {
         assertThat(repo.verifyOtp("000000").errorOrNull()).isEqualTo(AuthError.OtpInvalid)
         vfServer.takeRequest()
 
-        vfServer.enqueue(MockResponse(code = 200, body = """{"success":"2FA Code Verified."}"""))
+        // A verified code rotates the session: the interim pair is deleted server-side and the
+        // answer carries the verified pair, which is what the exchange and the store get.
+        vfServer.enqueue(fixture("ems.login-verify.rotated"))
         lawrisServer.enqueue(MockResponse(code = 200, body = exchangeBody()))
         assertThat(repo.verifyOtp("123456").isSuccess).isEqualTo(true)
         val verify = vfServer.takeRequest()
         assertThat(verify.url.encodedPath).isEqualTo("/authentication/login/verify/")
         assertThat(verify.headers["Authorization"]).isEqualTo("Bearer interim")
+        assertThat(lawrisServer.takeRequest().headers["Authorization"]).isEqualTo("Bearer vf-access-verified")
+        assertThat(tokenStore.current()).isEqualTo(AuthTokens("lawris-jwt", "vf-refresh-verified"))
+        // Nothing is pending any more.
+        assertThat(repo.verifyOtp("123456").errorOrNull()).isEqualTo(AuthError.MfaSessionExpired)
+    }
+
+    @Test
+    fun `a host that only acknowledges the 2FA code keeps exchanging the interim pair`() = runTest {
+        vfServer.enqueue(MockResponse(code = 200, body = """{"access_token":"interim","refresh_token":"vf-refresh","two_factor_enabled":true}"""))
+        val repo = repository()
+        repo.signIn("user@lexken.ai", "pw")
+        vfServer.takeRequest()
+
+        vfServer.enqueue(MockResponse(code = 200, body = """{"success":"2FA Code Verified."}"""))
+        lawrisServer.enqueue(MockResponse(code = 200, body = exchangeBody()))
+        assertThat(repo.verifyOtp("123456").isSuccess).isEqualTo(true)
+        vfServer.takeRequest()
+        assertThat(lawrisServer.takeRequest().headers["Authorization"]).isEqualTo("Bearer interim")
         assertThat(tokenStore.current()).isEqualTo(AuthTokens("lawris-jwt", "vf-refresh"))
     }
 
@@ -491,48 +566,54 @@ class AuthSessionTest {
     }
 
     @Test
-    fun `a password change mints from the refresh, posts current and new, then re-mints with the new password`() = runTest {
+    fun `a password change mints from the refresh, keeps the rotated refresh token, and posts current and new`() = runTest {
         tokenStore.save(AuthTokens("lawris-jwt", "vf-refresh"))
         signedIn()
-        vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody(access = "vf-access-r")))
+        vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody(access = "vf-access-r", refresh = "vf-refresh-r")))
         vfServer.enqueue(fixture("ems.password-change.success"))
-        vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody(access = "vf-access-n", refresh = "vf-refresh-n")))
-        lawrisServer.enqueue(MockResponse(code = 200, body = exchangeBody("lawris-jwt-n")))
 
         assertThat(changer().change("old-pass", "new-pass-123").isSuccess).isEqualTo(true)
 
-        vfServer.takeRequest() // the refresh grant
+        val grant = vfServer.takeRequest()
+        assertThat(grant.url.encodedPath).isEqualTo("/oauth2/mobile-token/")
+        assertThat(grant.body!!.utf8().contains(""""grant_type":"refresh_token"""")).isEqualTo(true)
         val change = vfServer.takeRequest()
         assertThat(change.url.encodedPath).isEqualTo("/authentication/password/change/")
         assertThat(change.headers["Authorization"]).isEqualTo("Bearer vf-access-r")
         mobileHeaders(change)
         assertThat(change.body!!.utf8()).isEqualTo("""{"current_password":"old-pass","password":"new-pass-123"}""")
-        val remint = vfServer.takeRequest()
-        assertThat(remint.body!!.utf8().contains(""""password":"new-pass-123"""")).isEqualTo(true)
-        assertThat(remint.body!!.utf8().contains(""""username":"user@lexken.ai"""")).isEqualTo(true)
-        assertThat(tokenStore.current()).isEqualTo(AuthTokens("lawris-jwt-n", "vf-refresh-n"))
+        // The host keeps the session that made the change, so nothing is re-minted: the Lawris
+        // JWT stays and the refresh token is the rotated one — two mobile-token calls would have
+        // spent the route's 5-per-minute budget for nothing.
+        assertThat(vfServer.requestCount).isEqualTo(2)
+        assertThat(lawrisServer.requestCount).isEqualTo(0)
+        assertThat(tokenStore.current()).isEqualTo(AuthTokens("lawris-jwt", "vf-refresh-r"))
     }
 
     @Test
-    fun `a wrong current password and a rejected new one map apart, and a failed re-mint keeps the session`() = runTest {
+    fun `a wrong current password and a rejected new one map apart, and the rotated refresh token survives both`() = runTest {
         tokenStore.save(AuthTokens("lawris-jwt", "vf-refresh"))
         signedIn()
-        vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody()))
+        vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody(refresh = "vf-refresh-2")))
         vfServer.enqueue(fixture("ems.password-change.wrong-current"))
         assertThat(changer().change("wrong", "new-pass-123").errorOrNull()).isEqualTo(PasswordChangeFailure.WrongCurrent)
         repeat(2) { vfServer.takeRequest() }
+        // The refresh grant consumed "vf-refresh": replaying it later would trip the host's reuse
+        // protection and revoke the family, so the rotated token is already stored.
+        assertThat(tokenStore.current()).isEqualTo(AuthTokens("lawris-jwt", "vf-refresh-2"))
 
-        vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody()))
+        vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody(refresh = "vf-refresh-3")))
         vfServer.enqueue(fixture("ems.password-change.rejected"))
         assertThat(changer().change("old-pass", "12345678").errorOrNull())
             .isEqualTo(PasswordChangeFailure.Rejected("This password is too common."))
         repeat(2) { vfServer.takeRequest() }
+        assertThat(tokenStore.current()).isEqualTo(AuthTokens("lawris-jwt", "vf-refresh-3"))
 
-        vfServer.enqueue(MockResponse(code = 200, body = vfTokenBody()))
-        vfServer.enqueue(fixture("ems.password-change.success"))
-        vfServer.enqueue(MockResponse(code = 503))
-        assertThat(changer().change("old-pass", "new-pass-123").isSuccess).isEqualTo(true)
-        assertThat(tokenStore.current()).isEqualTo(AuthTokens("lawris-jwt", "vf-refresh")) // untouched
+        // A refused refresh grant changes nothing and says the session is gone.
+        vfServer.enqueue(MockResponse(code = 401, body = """{"error":"invalid_grant"}"""))
+        assertThat(changer().change("old-pass", "new-pass-123").errorOrNull())
+            .isEqualTo(PasswordChangeFailure.Transport(DataError.Network.UNAUTHORIZED))
+        assertThat(tokenStore.current()).isEqualTo(AuthTokens("lawris-jwt", "vf-refresh-3"))
     }
 
     @Test

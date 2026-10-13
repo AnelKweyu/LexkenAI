@@ -7,6 +7,20 @@ import com.lexken.lexkenai.core.result.Result
 
 sealed interface AuthError : Error {
     data object InvalidCredentials : AuthError
+    /**
+     * The identity host refused the sign-in and said why in a sentence of its own — e.g. the
+     * account's 2FA channel is SMS but it has no phone number, or the host's rate limit. Shown
+     * verbatim; nothing the app can retry on its own.
+     */
+    data class SignInBlocked(val message: String) : AuthError
+    /**
+     * The credentials were right but the account has two-factor on and the identity host's mobile
+     * grant never issued the code: every call with the token answers 403 "Two Factor
+     * Authentication not verified", which the Lawris exchange reports as a dead token. Until the
+     * host runs its 2FA step on `oauth2/mobile-token/` (`middleware.py` only does so for
+     * `oauth2/token/`), such an account signs in on the web or turns 2FA off there.
+     */
+    data object TwoFactorBlocked : AuthError
     data object EmailAlreadyRegistered : AuthError
     /**
      * The identity host accepted the credentials but the account's email is not verified, so the
@@ -69,9 +83,11 @@ interface AuthRepository {
     suspend fun signIn(email: String, password: String): Result<SignInOutcome, AuthError>
 
     /**
-     * Verify the 2FA code for the sign-in that returned [SignInOutcome.MfaRequired]. The pending
-     * sign-in lives in memory only (tokens never touch navigation or saved state), so after
-     * process death this fails with [AuthError.MfaSessionExpired] and the user signs in again.
+     * Verify the 2FA code for the sign-in that returned [SignInOutcome.MfaRequired]. A verified
+     * code rotates the identity session: the host deletes the interim pair and answers with a new
+     * one, which is what gets exchanged. The pending sign-in lives in memory only (tokens never
+     * touch navigation or saved state), so after process death this fails with
+     * [AuthError.MfaSessionExpired] and the user signs in again.
      */
     suspend fun verifyOtp(code: String): EmptyResult<AuthError>
 

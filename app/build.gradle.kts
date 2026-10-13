@@ -111,7 +111,15 @@ android {
 
     testOptions {
         // JVM unit tests run on JUnit 5 (Jupiter); the instrumented suite stays on AndroidJUnit4.
-        unitTests.all { it.useJUnitPlatform() }
+        unitTests.all {
+            it.useJUnitPlatform()
+            // Live staging suite (rung T9): `./gradlew :app:testStagingDebugUnitTest -Plexken.live=true --tests "*LiveStaging*"`.
+            // Off by default so CI stays hermetic; the suite reads the hosts, the identity-host credentials and the
+            // test account from local.properties and spends one mobile-token mint per run.
+            it.systemProperty("lexken.live", (project.findProperty("lexken.live") as String?) ?: "false")
+            it.systemProperty("lexken.localProperties", rootProject.file("local.properties").absolutePath)
+            it.systemProperty("lexken.liveReport", rootProject.layout.buildDirectory.file("reports/live/staging-run.md").get().asFile.absolutePath)
+        }
         // Gradle Managed Devices for instrumented tests: `./gradlew pixel6api34StagingDebugAndroidTest`.
         managedDevices.localDevices {
             create("pixel6api34") {

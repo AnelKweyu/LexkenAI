@@ -207,6 +207,7 @@ class ChatFlowsTest {
 
     private class ScriptedExport(private val statuses: List<ExportStatus>) : ExportRepository {
         var reads = 0
+        var downloaded: String? = null
 
         override suspend fun formatToWord(rawText: String, conversationId: String, documentName: String): Result<String, ExportError> = Result.Success(
             "fmt-task-1",
@@ -216,9 +217,8 @@ class ChatFlowsTest {
             reads++
         }
 
-        override suspend fun download(fileUrl: String, filename: String): Result<ExportedDocument, DataError> = Result.Success(
-            ExportedDocument("docx".toByteArray(), filename),
-        )
+        override suspend fun download(fileUrl: String, filename: String): Result<ExportedDocument, DataError> =
+            Result.Success(ExportedDocument("docx".toByteArray(), filename)).also { downloaded = fileUrl }
 
         override suspend fun signedUrl(downloadUrl: String): Result<ArtifactDownload, DataError> = Result.Success(
             ArtifactDownload.Url("https://signed/$downloadUrl", null),
@@ -228,8 +228,15 @@ class ChatFlowsTest {
     @Test
     fun `the Word export polls five seconds apart, downloads on success, fails on a failure, and times out after thirty attempts`() = runTest {
         val success = ScriptedExport(listOf(ExportStatus.Pending, ExportStatus.Pending, ExportStatus.Success("/media/u/x.docx")))
-        val exported = ExportAnswerToWordUseCase(success, PollingEngine(), "LexKen AI")("text", thread, "13/10/2026", "2026-10-13").getOrNull()!!
+        val exported = ExportAnswerToWordUseCase(
+            success,
+            PollingEngine(),
+            "LexKen AI",
+            "https://stage.lexken.ai",
+        )("text", thread, "13/10/2026", "2026-10-13").getOrNull()!!
         assertThat(exported.filename).isEqualTo("lexken-ai-response-2026-10-13.docx")
+        // The live server answers a host-root path with spaces: it is resolved on the media host, never under /api.
+        assertThat(success.downloaded).isEqualTo("https://stage.lexken.ai/media/u/x.docx")
         assertThat(success.reads).isEqualTo(3)
         assertThat(testScheduler.currentTime).isEqualTo(10_000L)
 
@@ -238,16 +245,17 @@ class ChatFlowsTest {
                 ScriptedExport(listOf(ExportStatus.Failure("AI formatting error."))),
                 PollingEngine(),
                 "LexKen AI",
+                "https://stage.lexken.ai",
             )("text", thread, "d", "i")
         assertThat(failed).isEqualTo(Result.Failure(ExportError.Failed("AI formatting error.")))
 
         val forever = ScriptedExport(listOf(ExportStatus.Pending))
-        val timedOut = ExportAnswerToWordUseCase(forever, PollingEngine(), "LexKen AI")("text", thread, "d", "i")
+        val timedOut = ExportAnswerToWordUseCase(forever, PollingEngine(), "LexKen AI", "https://stage.lexken.ai")("text", thread, "d", "i")
         assertThat(timedOut).isEqualTo(Result.Failure(ExportError.TimedOut))
         assertThat(forever.reads).isEqualTo(30)
 
         assertThat(
-            ExportAnswerToWordUseCase(success, PollingEngine(), "LexKen AI")("text", null, "d", "i"),
+            ExportAnswerToWordUseCase(success, PollingEngine(), "LexKen AI", "https://stage.lexken.ai")("text", null, "d", "i"),
         ).isEqualTo(Result.Failure(ExportError.NoActiveConversation))
     }
 

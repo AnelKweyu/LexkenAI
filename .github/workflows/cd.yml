@@ -94,7 +94,7 @@ jobs:
           cp app/build/outputs/apk/staging/release/app-staging-release.apk "dist/lexken-ai-${{ steps.meta.outputs.version }}-staging.apk"
           (cd dist && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt)
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-${{ steps.meta.outputs.version }}
           path: dist/*
